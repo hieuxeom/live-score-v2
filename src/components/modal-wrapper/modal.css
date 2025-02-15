@@ -1,0 +1,21 @@
+.modal {
+	transform: translateY(-200vh);
+	opacity: 0.5;
+	transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.showModal {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.backdrop {
+	z-index: -1;
+	opacity: 0;
+	transition: all 0.5s ease-in-out;
+}
+
+.showBackdrop {
+	z-index: 1;
+	opacity: 1;
+}
