@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { THistoryScoreBoard, TMatchHistory, TRoomInfo, TPlayHistory, TTwoPlayResult } from "../../../../types/cardgame";
 import FirstPlaceMedal from "../../../../components/icon-svg/first-place-medal";
 import BurnBlackTwo from "../../../../components/icon-svg/burn-black-two";

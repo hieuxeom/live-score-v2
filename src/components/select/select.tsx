@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect } from "react";
+import { useEffect } from "react";
 
 interface SelectProps {
 	name: string;
@@ -32,7 +32,7 @@ const Select = ({ name, label, items, value, placeholder, className, onChange }:
 				onChange={onChange}
 			>
 				<option value={""}>{placeholder || "Chọn một"}</option>
-				{items.map((item, index) => (
+				{items.map((item) => (
 					<option
 						value={item.key}
 						selected={value === item.key}

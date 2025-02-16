@@ -23,7 +23,7 @@ const ModalWrapper = ({ title, isShowModal = false, setIsShowModal, classNames, 
 			<div
 				className={clsx(
 					"backdrop z-10 absolute top-0 left-0 w-full h-full bg-gray-300/40",
-					classNames.backdrop,
+					classNames && classNames.backdrop,
 					{
 						showBackdrop: isShowModal,
 					}
@@ -33,7 +33,7 @@ const ModalWrapper = ({ title, isShowModal = false, setIsShowModal, classNames, 
 			<div
 				className={clsx(
 					"modal absolute z-20 w-full h-full flex items-center justify-center gap-4",
-					classNames.modal,
+					classNames && classNames.modal,
 					{
 						showModal: isShowModal,
 					}

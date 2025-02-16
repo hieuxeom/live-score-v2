@@ -21,7 +21,7 @@ interface ModalAddResultProps {
 	roomDetails: TRoomInfo;
 }
 
-const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails }: ModalAddResultProps) => {
+const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddResultProps) => {
 	const { roomId } = useParams();
 
 	const [cookies] = useCookies(["username"]);
