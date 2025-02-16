@@ -25,6 +25,7 @@ const PlayerInRoom = ({ playersInRoom }: PlayerInRoomProps) => {
 					<Typography
 						type={"p"}
 						className={"text-dark-300"}
+						key={player}
 					>
 						{player}
 					</Typography>

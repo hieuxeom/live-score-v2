@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -9,8 +9,9 @@ import Wrapper from "../../components/wrapper";
 import ROUTE_PATH from "../../configs/routes.config";
 import useAxios from "../../hooks/useAxios";
 import { TSignIn, TSignInResponse } from "../../types/auth";
-import { IAPIResponse } from "../../types/general";
+import { IAPIResponse, TBaseVariants } from "../../types/general";
 import API_ROUTES from "../../configs/api-routes.config";
+import clsx from "clsx";
 
 // interface SignInProps {}
 
@@ -18,12 +19,15 @@ const SignIn = () => {
 	const navigate = useNavigate();
 	const axios = useAxios();
 
-	const [, setCookies] = useCookies(["access_token", "refresh_token", "email", "user_id"]);
+	const [, setCookies] = useCookies(["access_token", "refresh_token", "username", "user_id"]);
 
 	const [signInForm, setSignInForm] = useState<TSignIn>({
 		email: "",
+		username: null,
 		password: "",
 	});
+
+	const [currentSignInMethod, setCurrentSignInMethod] = useState<"email" | "username">("email");
 
 	const handleSignIn = () => {
 		const myFn = axios
@@ -32,7 +36,7 @@ const SignIn = () => {
 			.then((response) => {
 				setCookies("access_token", response.results.access_token, { maxAge: 10 });
 				setCookies("refresh_token", response.results.refresh_token, { maxAge: 60 * 60 * 24 });
-				setCookies("email", response.results.email, { maxAge: 60 * 60 * 24 });
+				setCookies("username", response.results.username, { maxAge: 60 * 60 * 24 });
 				setCookies("user_id", response.results.user_id, { maxAge: 60 * 60 * 24 });
 				navigate(ROUTE_PATH.HOME);
 			});
@@ -43,6 +47,20 @@ const SignIn = () => {
 			error: (error: any) => error.response.data.message,
 		});
 	};
+
+	const handleChangeSignInMethod = () => {
+		if (currentSignInMethod === "email") {
+			setCurrentSignInMethod("username");
+			setSignInForm((prev) => ({ ...prev, email: null }));
+		} else {
+			setCurrentSignInMethod("email");
+			setSignInForm((prev) => ({ ...prev, username: null }));
+		}
+	};
+
+	useEffect(() => {
+		console.log(signInForm);
+	}, [signInForm]);
 
 	return (
 		<Wrapper
@@ -74,30 +92,70 @@ const SignIn = () => {
 					type={"h2"}
 					className={"text-primary uppercase !font-black"}
 				>
-					Sign in to your account
+					Đăng nhập
 				</Typography>
+				<div className={"flex items-center"}>
+					<Button
+						fullWidth
+						className={"rounded-tr-none rounded-br-none border-r-none"}
+						color={"secondary"}
+						variant={
+							clsx({
+								solid: currentSignInMethod === "email",
+								bordered: currentSignInMethod !== "email",
+							}) as TBaseVariants
+						}
+						onClick={handleChangeSignInMethod}
+					>
+						Đăng nhập bằng Email
+					</Button>
+					<Button
+						fullWidth
+						className={"rounded-tl-none rounded-bl-none !border-l-0"}
+						color={"secondary"}
+						variant={
+							clsx({
+								solid: currentSignInMethod === "username",
+								bordered: currentSignInMethod !== "username",
+							}) as TBaseVariants
+						}
+						onClick={handleChangeSignInMethod}
+					>
+						Đăng nhập bằng Username
+					</Button>
+				</div>
+				{currentSignInMethod === "email" ? (
+					<Input
+						label={"Email"}
+						name={"email"}
+						value={signInForm.email || ""}
+						onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
+					/>
+				) : (
+					<Input
+						label={"Username"}
+						name={"username"}
+						value={signInForm.username || ""}
+						onChange={(e) => setSignInForm((prev) => ({ ...prev, username: e.target.value }))}
+					/>
+				)}
 				<Input
-					label={"Your email"}
-					name={"email"}
-					value={signInForm.email}
-					onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
-				/>
-				<Input
-					label={"Password"}
+					type={"password"}
+					label={"Mật khẩu"}
 					name={"password"}
 					value={signInForm.password}
 					onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
 				/>
 				<div className={"flex items-center justify-between"}>
 					<div className={"flex items-center gap-2"}>
-						<Typography>Don't have an account yet?</Typography>
+						<Typography>Bạn chưa có tài khoản?</Typography>
 						<Button
 							variant={"light"}
 							color={"primary"}
 							showBackground={false}
 							onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_UP)}
 						>
-							Sign up
+							Đăng kí tại đây
 						</Button>
 					</div>
 					<Button
@@ -105,7 +163,7 @@ const SignIn = () => {
 						color={"primary"}
 						onClick={handleSignIn}
 					>
-						Create an account
+						Đăng nhập ngay
 					</Button>
 				</div>
 			</form>

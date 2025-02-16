@@ -9,7 +9,7 @@ import Button from "../../../components/button";
 import { useCookies } from "react-cookie";
 import { TSocketRoomCreated } from "../../../types/cardgame";
 import toast from "react-hot-toast";
-import SOCKET_EVENT_NAME from "../../../configs/socket-evname.config";
+import SOCKET_EVENT_NAMES from "../../../configs/socket-event-names.config";
 
 // interface NewRoomProps {}
 
@@ -35,14 +35,14 @@ const NewRoom = () => {
 	});
 
 	const handleCreateRoom = () => {
-		socket.emit(SOCKET_EVENT_NAME.CREATE_NEW_ROOM.SEND, {
+		socket.emit(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.SEND, {
 			created_by: cookies.user_id,
 			roomConfig,
 		});
 	};
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAME.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
 			toast.success("Tạo phòng thành công");
 			return navigate(ROUTE_PATH.CARD_GAME.GAME_ROOM(response.newRoomId));
 		});

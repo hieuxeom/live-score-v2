@@ -8,7 +8,7 @@ import useSocket from "../../../../hooks/useSocket";
 import toast from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router";
-import SOCKET_EVENT_NAME from "../../../../configs/socket-evname.config";
+import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
 
 interface MatchConfigProps {
 	roomDetails: TRoomInfo;
@@ -18,16 +18,16 @@ interface MatchConfigProps {
 const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 	const { roomId } = useParams();
 
-	const [cookies] = useCookies(["email", "user_id"]);
+	const [cookies] = useCookies(["username", "user_id"]);
 
 	const socket = useSocket();
 
 	const handleSaveNewConfig = () => {
 		console.log("roomConfigUpdated");
 
-		socket.emit(SOCKET_EVENT_NAME.UPDATE_ROOM_CONFIG.SEND, {
+		socket.emit(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.SEND, {
 			roomId,
-			updatedBy: cookies.email,
+			updatedBy: cookies.username,
 			newConfig: {
 				first: roomDetails.first,
 				second: roomDetails.second,
@@ -42,7 +42,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 	};
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAME.UPDATE_ROOM_CONFIG.RECEIVE, (response: TSocketUpdatedRoomConfig) => {
+		socket.on(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.RECEIVE, (response: TSocketUpdatedRoomConfig) => {
 			console.log("roomConfigUpdated", response);
 
 			toast.success(`${response.updatedBy} vừa cập nhật cấu hình điểm`);

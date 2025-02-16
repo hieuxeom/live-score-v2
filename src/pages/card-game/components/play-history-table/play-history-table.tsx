@@ -22,7 +22,7 @@ import Button from "../../../../components/button";
 import ICON_CONFIG from "../../../../configs/icon.config";
 import { useParams } from "react-router";
 import useSocket from "../../../../hooks/useSocket";
-import SOCKET_EVENT_NAME from "../../../../configs/socket-evname.config";
+import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
 
 interface PlayHistoryTableProps {
 	roomInfo: TRoomInfo;
@@ -33,7 +33,7 @@ interface PlayHistoryTableProps {
 const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHistoryTableProps) => {
 	const { roomId } = useParams();
 
-	const [cookies] = useCookies(["email", "user_id"]);
+	const [cookies] = useCookies(["username", "user_id"]);
 
 	const socket = useSocket();
 
@@ -89,38 +89,29 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 		}
 
 		twoPlayResult.forEach((data) => {
-			if (data.burner === matchData.player_index) {
-				result.push(data.two_color === "red" ? <BurnRedTwo /> : <BurnBlackTwo />);
-			}
+			const quantityArray = Array.from({ length: data.quantity });
 
-			if (data.taker === matchData.player_index) {
-				result.push(data.two_color === "red" ? <TakeRedTwo /> : <TakeBlackTwo />);
-			}
+			quantityArray.forEach((_) => {
+				if (data.burner === matchData.player_index) {
+					result.push(data.two_color === "red" ? <BurnRedTwo /> : <BurnBlackTwo />);
+				}
+
+				if (data.taker === matchData.player_index) {
+					result.push(data.two_color === "red" ? <TakeRedTwo /> : <TakeBlackTwo />);
+				}
+			});
 		});
 
 		return result;
 	};
 
 	const handleDeleteResults = (matchId: string | number) => {
-		socket.emit(SOCKET_EVENT_NAME.DELETE_MATCH_RESULTS.SEND, {
-			deleteBy: cookies.email,
+		socket.emit(SOCKET_EVENT_NAMES.DELETE_MATCH_RESULTS.SEND, {
+			deleteBy: cookies.username,
 			roomId,
 			matchId,
 		});
 	};
-
-	const handleMapResults = () => {
-		const listId = Array.from(new Set(matchResults.map((item) => item.match_id)));
-
-		console.log("listId", listId);
-
-		// matchResults.
-	};
-
-	useEffect(() => {
-		console.log(matchResults);
-		handleMapResults();
-	}, []);
 
 	return (
 		<div
@@ -259,7 +250,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 						emptyMessage={"Chưa chơi trận nào"}
 					>
 						{Array.from(new Set(matchResults.map((item) => item.match_id))).map((matchId, index) => (
-							<TableRow>
+							<TableRow key={index}>
 								<TableCell
 									borderType={"full"}
 									className={"text-center border-primary relative"}

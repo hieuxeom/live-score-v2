@@ -23,7 +23,7 @@ export type TRoomConfig = {
 	player4_name: string;
 };
 
-export type TRoomInfo = TRoom & TRoomConfig & { email: string };
+export type TRoomInfo = TRoom & TRoomConfig & { username: string };
 
 export type TRoomConfig = Omit<TRoomInfo, "room_id" | "created_at" | "updated_at" | "is_closed" | "is_deleted">;
 

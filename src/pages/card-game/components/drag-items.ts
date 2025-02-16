@@ -1,4 +1,4 @@
-const RESULT_DRAG_ITEMS = [
+export const BASE_RESULT = [
 	{
 		key: "firstPlace",
 		value: "Nhất",
@@ -15,6 +15,9 @@ const RESULT_DRAG_ITEMS = [
 		key: "fourthPlace",
 		value: "Bét",
 	},
+];
+
+export const SPECIAL_RESULT = [
 	{
 		key: "winAll",
 		value: "Tới trắng",
@@ -29,4 +32,4 @@ const RESULT_DRAG_ITEMS = [
 	},
 ];
 
-export default RESULT_DRAG_ITEMS;
+export const RESULT_DRAG_ITEMS = [...BASE_RESULT, ...SPECIAL_RESULT];

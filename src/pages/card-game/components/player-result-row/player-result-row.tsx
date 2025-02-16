@@ -1,6 +1,5 @@
 import Typography from "../../../../components/typography";
-import RESULT_DRAG_ITEMS from "../drag-items";
-
+import { RESULT_DRAG_ITEMS } from "../drag-items";
 interface PlayerResultRowProps {
 	onDrop: (e: React.DragEvent) => void;
 	onDragOver: (e: React.DragEvent) => void;
@@ -26,6 +25,7 @@ const PlayerResultRow = ({ onDrop, onDragOver, playerIndex, value, onRemoveValue
 				) : (
 					value.map((item) => (
 						<div
+							key={`player-${playerIndex}-result-${item}`}
 							className={"px-4 py-1 bg-dark w-max text-light rounded-lg cursor-grab"}
 							onClick={() => onRemoveValue(item)}
 						>

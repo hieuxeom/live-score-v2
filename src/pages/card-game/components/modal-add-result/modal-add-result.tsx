@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useParams } from "react-router";
@@ -8,11 +7,12 @@ import useSocket from "../../../../hooks/useSocket";
 import { TMatchHistory, TPostPlayerResult, TRoomInfo, TTwoPlayResult } from "../../../../types/cardgame";
 import PlayerResultRow from "../player-result-row";
 import ModalWrapper from "../../../../components/modal-wrapper";
-import RESULT_DRAG_ITEMS from "../drag-items";
 import ICON_CONFIG from "../../../../configs/icon.config";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
-import SOCKET_EVENT_NAME from "../../../../configs/socket-evname.config";
+import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
+import Select from "../../../../components/select";
+import { BASE_RESULT, RESULT_DRAG_ITEMS, SPECIAL_RESULT } from "../drag-items";
 
 interface ModalAddResultProps {
 	isShowModal: boolean;
@@ -24,7 +24,7 @@ interface ModalAddResultProps {
 const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails }: ModalAddResultProps) => {
 	const { roomId } = useParams();
 
-	const [cookies] = useCookies(["email"]);
+	const [cookies] = useCookies(["username"]);
 
 	const socket = useSocket();
 
@@ -36,6 +36,42 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 	const [player4DragValue, setPlayer4DragValue] = useState<string[]>([]);
 
 	const [twoPlayResults, setTwoPlayResults] = useState<Omit<TTwoPlayResult, "result_id" | "match_id">[]>([]);
+
+	const [availableDragResults, setAvailableDragResults] = useState([...RESULT_DRAG_ITEMS]);
+
+	const getPlayerName = (playerIndex: number) => {
+		switch (playerIndex) {
+			case 1:
+				return roomDetails.player1_name;
+			case 2:
+				return roomDetails.player2_name;
+			case 3:
+				return roomDetails.player3_name;
+			case 4:
+				return roomDetails.player4_name;
+			default:
+				return "";
+		}
+	};
+
+	const listItems = [
+		{
+			key: 1,
+			value: getPlayerName(1),
+		},
+		{
+			key: 2,
+			value: getPlayerName(2),
+		},
+		{
+			key: 3,
+			value: getPlayerName(3),
+		},
+		{
+			key: 4,
+			value: getPlayerName(4),
+		},
+	];
 
 	const handleMapPlayerResult = (resultData: string[]): TPostPlayerResult => {
 		console.log(resultData);
@@ -59,26 +95,17 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 		return resultObj;
 	};
 
-	const getNewMatchId = (matchHistory: TMatchHistory[]) => {
-		const listId = matchHistory.map((_v) => _v.match_id);
-
-		console.log("xx", listId.length);
-
-		return listId.length > 0 ? Math.max(...listId) + 1 : 1;
-	};
-
 	const handleSaveNewMatchResult = () => {
 		if (!roomId) return;
 
-		socket.emit(SOCKET_EVENT_NAME.CREATE_RESULT.SEND, {
+		socket.emit(SOCKET_EVENT_NAMES.CREATE_RESULT.SEND, {
 			roomId,
-			matchId: getNewMatchId(matchHistory),
 			player1Result: handleMapPlayerResult(player1DragValue),
 			player2Result: handleMapPlayerResult(player2DragValue),
 			player3Result: handleMapPlayerResult(player3DragValue),
 			player4Result: handleMapPlayerResult(player4DragValue),
 			twoPlayResults,
-			createdBy: cookies.email,
+			createdBy: cookies.username,
 		});
 
 		createStatusToast.current = toast.loading("Đang lưu kết quả trận đấu...", {});
@@ -90,6 +117,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 		setPlayer3DragValue([]);
 		setPlayer4DragValue([]);
 		setTwoPlayResults([]);
+		setAvailableDragResults([...RESULT_DRAG_ITEMS]);
 
 		document.querySelectorAll("input[type=checkbox]").forEach((el) => {
 			(el as HTMLInputElement).checked = false;
@@ -100,24 +128,49 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 		e.dataTransfer.setData("playerResult", value);
 	};
 
-	const handleOnDropMatchResult = (e: React.DragEvent) => {
-		const playerResult = e.dataTransfer.getData("playerResult") as string;
-
-		const playerIndex = e.currentTarget.getAttribute("data-player-index");
-
-		if (!playerIndex) return;
-
+	const handleWinAllResult = (playerIndex: number) => {
 		switch (playerIndex) {
-			case "1":
+			case 1:
+				setPlayer1DragValue((prev) => [...prev, "winAll"]);
+				setPlayer2DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer3DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer4DragValue((prev) => [...prev, "sweptOut"]);
+				break;
+			case 2:
+				setPlayer1DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer2DragValue((prev) => [...prev, "winAll"]);
+				setPlayer3DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer4DragValue((prev) => [...prev, "sweptOut"]);
+				break;
+			case 3:
+				setPlayer1DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer2DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer3DragValue((prev) => [...prev, "winAll"]);
+				setPlayer4DragValue((prev) => [...prev, "sweptOut"]);
+				break;
+			case 4:
+				setPlayer1DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer2DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer3DragValue((prev) => [...prev, "sweptOut"]);
+				setPlayer4DragValue((prev) => [...prev, "winAll"]);
+				break;
+			default:
+				break;
+		}
+	};
+
+	const handleNormalResult = (playerIndex: number, playerResult: string) => {
+		switch (playerIndex) {
+			case 1:
 				setPlayer1DragValue((prev) => [...prev, playerResult]);
 				break;
-			case "2":
+			case 2:
 				setPlayer2DragValue((prev) => [...prev, playerResult]);
 				break;
-			case "3":
+			case 3:
 				setPlayer3DragValue((prev) => [...prev, playerResult]);
 				break;
-			case "4":
+			case 4:
 				setPlayer4DragValue((prev) => [...prev, playerResult]);
 				break;
 			default:
@@ -125,32 +178,41 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 		}
 	};
 
-	const handleOnDragTwoPlayResult = (e: React.DragEvent, value: string) => {
-		e.dataTransfer.setData("twoPlayResult", value);
+	const handleOnDropMatchResult = (e: React.DragEvent) => {
+		const playerResult = e.dataTransfer.getData("playerResult") as string;
+
+		const playerIndex = e.currentTarget.getAttribute("data-player-index");
+
+		if (SPECIAL_RESULT.find((_v) => _v.key === playerResult)) {
+			if (playerResult === "winAll") {
+				return handleWinAllResult(Number(playerIndex));
+			}
+		}
+
+		if (BASE_RESULT.find((_v) => _v.key === playerResult)) {
+			setAvailableDragResults((prev) => prev.filter((_v) => _v.key !== playerResult));
+			handleNormalResult(Number(playerIndex), playerResult);
+		}
 	};
 
-	const handleOnDropTwoPlayResult = (e: React.DragEvent) => {
-		const twoPlayResult = e.dataTransfer.getData("twoPlayResult") as string;
+	const handleRemovePlayerResult = (playerIndex: number, playerResult: string) => {
+		setAvailableDragResults((prev) => [
+			...prev,
+			{ key: playerResult, value: RESULT_DRAG_ITEMS.find((_v) => _v.key === playerResult)?.value || "" },
+		]);
 
-		const resultIndex = e.currentTarget.getAttribute("data-result-index");
-		const resultTarget = e.currentTarget.getAttribute("data-result-target");
-
-		if (!resultIndex || !resultTarget) return;
-
-		switch (resultTarget) {
-			case "burner":
-				setTwoPlayResults((prev) => {
-					const newResults = [...prev];
-					newResults[Number(resultIndex)].burner = Number(twoPlayResult);
-					return newResults;
-				});
+		switch (playerIndex) {
+			case 1:
+				setPlayer1DragValue((prev) => prev.filter((_v) => _v !== playerResult));
 				break;
-			case "taker":
-				setTwoPlayResults((prev) => {
-					const newResults = [...prev];
-					newResults[Number(resultIndex)].taker = Number(twoPlayResult);
-					return newResults;
-				});
+			case 2:
+				setPlayer2DragValue((prev) => prev.filter((_v) => _v !== playerResult));
+				break;
+			case 3:
+				setPlayer3DragValue((prev) => prev.filter((_v) => _v !== playerResult));
+				break;
+			case 4:
+				setPlayer4DragValue((prev) => prev.filter((_v) => _v !== playerResult));
 				break;
 			default:
 				break;
@@ -159,6 +221,28 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 
 	const handleOnDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
+	};
+
+	const handleSelectBurner = (resultIndex: number, playerIndex: number) => {
+		setTwoPlayResults((prev) => {
+			const newResults = [...prev];
+			newResults[resultIndex].burner = playerIndex;
+			return newResults;
+		});
+	};
+
+	const handleSelectTaker = (resultIndex: number, playerIndex: number) => {
+		if (twoPlayResults[resultIndex].burner === Number(playerIndex)) {
+			console.log("vcl");
+
+			return;
+		}
+
+		setTwoPlayResults((prev) => {
+			const newResults = [...prev];
+			newResults[resultIndex].taker = playerIndex;
+			return newResults;
+		});
 	};
 
 	const handleChangeQuantity = (index: number, value: number) => {
@@ -175,21 +259,6 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 			newResults[index].two_color = value;
 			return newResults;
 		});
-	};
-
-	const getPlayerName = (playerIndex: number) => {
-		switch (playerIndex) {
-			case 1:
-				return roomDetails.player1_name;
-			case 2:
-				return roomDetails.player2_name;
-			case 3:
-				return roomDetails.player3_name;
-			case 4:
-				return roomDetails.player4_name;
-			default:
-				return "";
-		}
 	};
 
 	const handleAddTwoPlayResultRow = () => {
@@ -215,9 +284,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 	}, [isShowModal]);
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAME.CREATE_RESULT.RECEIVE, () => {
-			console.log("xx", createStatusToast.current);
-
+		socket.on(SOCKET_EVENT_NAMES.CREATE_RESULT.RECEIVE, () => {
 			toast.success("Lưu kết quả trận đấu thành công!", { id: createStatusToast.current });
 		});
 	}, []);
@@ -227,6 +294,9 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 			title={"Kết quả trận đấu"}
 			isShowModal={isShowModal}
 			setIsShowModal={setIsShowModal}
+			classNames={{
+				modal: "-top-16",
+			}}
 		>
 			<main className={"w-full flex flex-col gap-4 py-4"}>
 				<div className={"w-full flex items-start gap-4"}>
@@ -236,47 +306,34 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 							onDragOver={handleOnDragOver}
 							playerIndex={1}
 							value={player1DragValue}
-							onRemoveValue={(item: string) =>
-								setPlayer1DragValue((prev) => prev.filter((_v) => _v !== item))
-							}
+							onRemoveValue={(item: string) => handleRemovePlayerResult(1, item)}
 						/>
 						<PlayerResultRow
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={2}
 							value={player2DragValue}
-							onRemoveValue={(item: string) =>
-								setPlayer2DragValue((prev) => prev.filter((_v) => _v !== item))
-							}
+							onRemoveValue={(item: string) => handleRemovePlayerResult(2, item)}
 						/>
 						<PlayerResultRow
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={3}
 							value={player3DragValue}
-							onRemoveValue={(item: string) =>
-								setPlayer3DragValue((prev) => prev.filter((_v) => _v !== item))
-							}
+							onRemoveValue={(item: string) => handleRemovePlayerResult(3, item)}
 						/>
 						<PlayerResultRow
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={4}
 							value={player4DragValue}
-							onRemoveValue={(item: string) =>
-								setPlayer4DragValue((prev) => prev.filter((_v) => _v !== item))
-							}
+							onRemoveValue={(item: string) => handleRemovePlayerResult(4, item)}
 						/>
 					</div>
 					<div className={"w-1/3 flex flex-wrap gap-4 items-center"}>
-						{RESULT_DRAG_ITEMS.filter(
-							(_v) =>
-								!player1DragValue.includes(_v.key) &&
-								!player2DragValue.includes(_v.key) &&
-								!player3DragValue.includes(_v.key) &&
-								!player4DragValue.includes(_v.key)
-						).map((item) => (
+						{availableDragResults.map((item) => (
 							<div
+								key={item.key}
 								className={"px-8 py-2 bg-secondary text-light rounded-xl cursor-grab"}
 								draggable={true}
 								onDragStart={(e) => handleOnDragMatchResult(e, item.key)}
@@ -303,28 +360,20 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 						</Button>
 					</div>
 					<div className={"w-full flex items-start gap-4"}>
-						<div className={"w-2/3 flex flex-col gap-4"}>
+						<div className={"w-full flex flex-col gap-4"}>
 							{twoPlayResults.map((item, index) => (
-								<div className={"flex items-center gap-4"}>
-									<div
-										className={clsx(
-											"w-max min-w-24 border-dark text-center px-6 py-2 rounded-2xl",
-											{
-												"bg-dark text-light": item.burner !== 0,
-												"bg-transparent text-dark border-2": item.burner === 0,
-											}
-										)}
-										onDrop={handleOnDropTwoPlayResult}
-										onDragOver={handleOnDragOver}
-										data-result-index={index.toString()}
-										data-result-target={"burner"}
-									>
-										{item.burner !== 0 ? (
-											<Typography type={"h5"}>{getPlayerName(item.burner)}</Typography>
-										) : (
-											<Typography type={"h5"}>-</Typography>
-										)}
-									</div>
+								<div
+									className={"flex items-center gap-4"}
+									key={index}
+								>
+									<Select
+										name={`burner-${index}`}
+										placeholder={"Chọn người thua"}
+										items={listItems}
+										value={item.burner}
+										className={"min-w-32"}
+										onChange={(e) => handleSelectBurner(index, Number(e.target.value))}
+									/>
 									<Typography type={"h5"}>Bị chặt/cháy</Typography>
 									<Button
 										size={"lg"}
@@ -345,25 +394,14 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 										heo {item.two_color === "red" ? "đỏ" : "đen"}
 									</Button>
 									<Typography type={"h5"}>bởi</Typography>
-									<div
-										className={clsx(
-											"w-max min-w-24 border-dark text-center px-6 py-2 rounded-2xl",
-											{
-												"bg-dark text-light": item.taker !== 0,
-												"bg-transparent text-dark border-2": item.taker === 0,
-											}
-										)}
-										onDrop={handleOnDropTwoPlayResult}
-										onDragOver={handleOnDragOver}
-										data-result-index={index.toString()}
-										data-result-target={"taker"}
-									>
-										{item.taker !== 0 ? (
-											<Typography type={"h5"}>{getPlayerName(item.taker)}</Typography>
-										) : (
-											<Typography type={"h5"}>-</Typography>
-										)}
-									</div>
+									<Select
+										name={`taker-${index}`}
+										placeholder={"Chọn người ăn"}
+										items={listItems}
+										value={item.taker}
+										className={"min-w-32"}
+										onChange={(e) => handleSelectTaker(index, Number(e.target.value))}
+									/>
 									<Button
 										color={"danger"}
 										variant={"light"}
@@ -373,17 +411,6 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, matchHistory, roomDetails
 										onClick={() => handleRemoveTwoPlayResultRow(index)}
 										startIcon={ICON_CONFIG.CLOSE}
 									></Button>
-								</div>
-							))}
-						</div>
-						<div className={"w-1/3 flex flex-wrap gap-4 items-center"}>
-							{Array.from({ length: 4 }).map((_, index) => (
-								<div
-									className={"px-8 py-2 bg-secondary text-light rounded-xl cursor-grab"}
-									draggable={true}
-									onDragStart={(e) => handleOnDragTwoPlayResult(e, (index + 1).toString())}
-								>
-									<Typography type={"large"}>{getPlayerName(index + 1)}</Typography>
 								</div>
 							))}
 						</div>

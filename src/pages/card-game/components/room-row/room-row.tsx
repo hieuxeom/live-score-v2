@@ -13,7 +13,7 @@ interface RoomRowProps {
 const RoomRow = ({ roomInfo }: RoomRowProps) => {
 	const navigate = useNavigate();
 
-	const [cookies] = useCookies(["email"]);
+	const [cookies] = useCookies(["username"]);
 
 	const handleEnterRoom = () => {
 		navigate(ROUTE_PATH.CARD_GAME.GAME_ROOM(roomInfo.room_id));
@@ -21,7 +21,7 @@ const RoomRow = ({ roomInfo }: RoomRowProps) => {
 
 	return (
 		<div
-			onClick={cookies.email && handleEnterRoom}
+			onClick={cookies.username && handleEnterRoom}
 			className={
 				"w-full p-4 flex justify-between items-center border-secondary border-b-8 border-2 rounded-2xl hover:border-secondary transtion-all duration-300 cursor-pointer"
 			}
@@ -85,7 +85,7 @@ const RoomRow = ({ roomInfo }: RoomRowProps) => {
 						Phòng đã đóng
 					</Typography>
 				) : (
-					cookies.email && (
+					cookies.username && (
 						<Button
 							onClick={handleEnterRoom}
 							isIconOnly={true}

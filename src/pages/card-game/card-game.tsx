@@ -12,7 +12,7 @@ import Button from "../../components/button";
 import ICON_CONFIG from "../../configs/icon.config";
 import ROUTE_PATH from "../../configs/routes.config";
 import RoomRow from "./components/room-row";
-import SOCKET_EVENT_NAME from "../../configs/socket-evname.config";
+import SOCKET_EVENT_NAMES from "../../configs/socket-event-names.config";
 
 // interface CardGameProps {}
 
@@ -20,7 +20,7 @@ const CardGame = () => {
 	const axios = useAxios();
 	const socket = useSocket();
 
-	const [cookies] = useCookies(["email", "user_id"]);
+	const [cookies] = useCookies(["username", "user_id"]);
 
 	const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const CardGame = () => {
 	}, []);
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAME.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
 			return setListRooms(response.listRooms);
 		});
 	}, []);
@@ -68,11 +68,11 @@ const CardGame = () => {
 							Trận đấu
 						</Typography>
 					</div>
-					{cookies.email && (
+					{cookies.username && (
 						<Button
 							size={"lg"}
 							startIcon={ICON_CONFIG.NEW}
-							isDisabled={!cookies.email}
+							isDisabled={!cookies.username}
 							onClick={() => navigate(ROUTE_PATH.CARD_GAME.CREATE_NEW_ROOM)}
 						>
 							Tạo phòng mới

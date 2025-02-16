@@ -10,13 +10,13 @@ import ROUTE_PATH from "../../../configs/routes.config";
 const ClientLayout = () => {
 	const navigate = useNavigate();
 
-	const [cookies, , removeCookies] = useCookies(["access_token", "refresh_token", "email", "user_id"]);
+	const [cookies, , removeCookies] = useCookies(["access_token", "refresh_token", "username", "user_id"]);
 
 	const handleLogout = () => {
 		removeCookies("access_token");
 		removeCookies("refresh_token");
 		removeCookies("user_id");
-		removeCookies("email");
+		removeCookies("username");
 		toast.success("Đăng xuất thành công");
 	};
 
@@ -41,7 +41,7 @@ const ClientLayout = () => {
 					<div className={"flex items-center gap-4"}>
 						{cookies.refresh_token ? (
 							<>
-								<Typography type={"small"}>{cookies.email ?? "-"}</Typography>
+								<Typography type={"small"}>{cookies.username ?? "-"}</Typography>
 								<Button
 									color={"danger"}
 									size={"sm"}

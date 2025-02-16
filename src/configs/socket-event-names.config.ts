@@ -1,4 +1,4 @@
-const SOCKET_EVENT_NAME = {
+const SOCKET_EVENT_NAMES = {
 	UPDATE_ROOM_CONFIG: {
 		SEND: "updateRoomConfig",
 		RECEIVE: "roomConfigUpdated",
@@ -20,4 +20,4 @@ const SOCKET_EVENT_NAME = {
 	PLAYER_CHANGE: "playerChange",
 };
 
-export default SOCKET_EVENT_NAME;
+export default SOCKET_EVENT_NAMES;

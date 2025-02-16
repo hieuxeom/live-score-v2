@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Typography from "../typography";
 
 interface InputProps {
+	type?: "text" | "number" | "email" | "password";
 	id?: string;
 	name: string;
 	label: string;
@@ -18,6 +19,7 @@ interface InputProps {
 }
 
 const Input = ({
+	type = "text",
 	id,
 	name,
 	validator,
@@ -69,10 +71,10 @@ const Input = ({
 					</div>
 				)}
 				<input
-					type={"text"}
 					id={id}
 					name={name}
 					value={value}
+					type={type}
 					onChange={onChange}
 					onFocus={() => setIsFocus(true)}
 					onBlur={() => setIsFocus(false)}

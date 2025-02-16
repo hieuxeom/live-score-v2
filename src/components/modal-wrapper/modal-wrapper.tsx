@@ -10,22 +10,34 @@ interface ModalWrapperProps {
 	title: string;
 	isShowModal: boolean;
 	setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+	classNames?: {
+		backdrop?: string;
+		modal?: string;
+	};
 	children: React.ReactNode;
 }
 
-const ModalWrapper = ({ title, isShowModal = false, setIsShowModal, children }: ModalWrapperProps) => {
+const ModalWrapper = ({ title, isShowModal = false, setIsShowModal, classNames, children }: ModalWrapperProps) => {
 	return (
 		<>
 			<div
-				className={clsx("backdrop z-10 absolute top-0 left-0 w-full h-full bg-gray-300/40", {
-					showBackdrop: isShowModal,
-				})}
+				className={clsx(
+					"backdrop z-10 absolute top-0 left-0 w-full h-full bg-gray-300/40",
+					classNames.backdrop,
+					{
+						showBackdrop: isShowModal,
+					}
+				)}
 				onClick={() => setIsShowModal(false)}
 			></div>
 			<div
-				className={clsx("modal absolute z-20 w-full h-full flex items-center justify-center gap-4", {
-					showModal: isShowModal,
-				})}
+				className={clsx(
+					"modal absolute z-20 w-full h-full flex items-center justify-center gap-4",
+					classNames.modal,
+					{
+						showModal: isShowModal,
+					}
+				)}
 			>
 				<div
 					className={

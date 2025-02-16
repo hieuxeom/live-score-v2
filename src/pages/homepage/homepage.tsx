@@ -25,7 +25,7 @@ const Homepage = () => {
 					startIcon={ICON_CONFIG.BADMINTON_LOGO}
 					onClick={() => navigate("/badminton")}
 				>
-					Badminton
+					Cầu lông
 				</Button>
 
 				<Button
@@ -36,7 +36,7 @@ const Homepage = () => {
 					startIcon={ICON_CONFIG.SOCCER_LOGO}
 					onClick={() => navigate("/football")}
 				>
-					Football
+					Bóng đá
 				</Button>
 				<Button
 					fullWidth
@@ -46,7 +46,7 @@ const Homepage = () => {
 					startIcon={ICON_CONFIG.CARDGAME_LOGO}
 					onClick={() => navigate("/card-game")}
 				>
-					Card Game
+					Bài Tiến lên
 				</Button>
 				<Button
 					fullWidth
