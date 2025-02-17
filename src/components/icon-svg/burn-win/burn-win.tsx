@@ -13,7 +13,7 @@ const BurnWin = ({ size = 40 }: BurnWinProps) => (
 	>
 		<g
 			id="SVGRepo_bgCarrier"
-			stroke-width="0"
+			strokeWidth="0"
 		></g>
 		<g
 			id="SVGRepo_tracerCarrier"

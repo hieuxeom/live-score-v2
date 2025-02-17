@@ -16,7 +16,7 @@ const XSymbol = ({ xClass, className, size, color }: XSymbolProps) => (
 	>
 		<g
 			id="SVGRepo_bgCarrier"
-			stroke-width="0"
+			strokeWidth="0"
 		></g>
 		<g
 			id="SVGRepo_tracerCarrier"

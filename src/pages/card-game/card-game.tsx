@@ -13,6 +13,7 @@ import ICON_CONFIG from "../../configs/icon.config";
 import ROUTE_PATH from "../../configs/routes.config";
 import RoomRow from "./components/room-row";
 import SOCKET_EVENT_NAMES from "../../configs/socket-event-names.config";
+import Checkbox from "../../components/checkbox";
 
 // interface CardGameProps {}
 
@@ -25,7 +26,8 @@ const CardGame = () => {
 	const navigate = useNavigate();
 
 	const [listRooms, setListRooms] = useState<TRoomInfo[]>([]);
-
+	const [listRoomsRender, setListRoomsRender] = useState<TRoomInfo[]>([]);
+	const [isShowClosedRoom, setIsShowClosedRoom] = useState<boolean>(false);
 	const getListGameRooms = () => {
 		return axios
 			.get<IAPIResponse<TRoomInfo[]>>(API_ROUTES.GAME_CARD.GET_ALL_ROOMS)
@@ -48,6 +50,14 @@ const CardGame = () => {
 			return setListRooms(response.listRooms);
 		});
 	}, []);
+
+	useEffect(() => {
+		if (isShowClosedRoom) {
+			setListRoomsRender(listRooms);
+		} else {
+			setListRoomsRender(listRooms.filter((room) => !room.is_closed));
+		}
+	}, [listRooms, isShowClosedRoom]);
 
 	return (
 		<Wrapper
@@ -85,6 +95,15 @@ const CardGame = () => {
 				</div>
 				<div className={"w-full flex items-center justify-end"}>
 					<div className={"flex items-center text-center"}>
+						<div className={"border-r px-2 flex items-center"}>
+							<Checkbox
+								value={isShowClosedRoom}
+								onChange={(e) => setIsShowClosedRoom(e.target.checked)}
+								name={"show-closed-room"}
+							>
+								Hiện phòng đã đóng
+							</Checkbox>
+						</div>
 						<Typography
 							type={"small"}
 							className={"text-secondary px-2 border-r border-dark"}
@@ -116,7 +135,7 @@ const CardGame = () => {
 						backgroundAttachment: "local, local, scroll, scroll",
 					}}
 				>
-					{listRooms.map((room) => (
+					{listRoomsRender.map((room) => (
 						<RoomRow
 							roomInfo={room}
 							key={room.room_id}
