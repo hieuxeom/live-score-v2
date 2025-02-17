@@ -23,8 +23,6 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 	const socket = useSocket();
 
 	const handleSaveNewConfig = () => {
-		console.log("roomConfigUpdated");
-
 		socket.emit(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.SEND, {
 			roomId,
 			updatedBy: cookies.username,
@@ -43,8 +41,6 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 
 	useEffect(() => {
 		socket.on(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.RECEIVE, (response: TSocketUpdatedRoomConfig) => {
-			console.log("roomConfigUpdated", response);
-
 			toast.success(`${response.updatedBy} vừa cập nhật cấu hình điểm`);
 		});
 	}, []);

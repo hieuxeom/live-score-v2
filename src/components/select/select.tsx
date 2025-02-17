@@ -11,9 +11,6 @@ interface SelectProps {
 }
 
 const Select = ({ name, label, items, value, placeholder, className, onChange }: SelectProps) => {
-	useEffect(() => {
-		console.log(value);
-	}, [value]);
 	return (
 		<form className={className}>
 			{label && (

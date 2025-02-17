@@ -74,8 +74,6 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 	];
 
 	const handleMapPlayerResult = (resultData: string[]): TPostPlayerResult => {
-		console.log(resultData);
-
 		const resultObj: TPostPlayerResult = {
 			rank:
 				resultData.includes("firstPlace") || resultData.includes("winAll")
@@ -233,8 +231,6 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 
 	const handleSelectTaker = (resultIndex: number, playerIndex: number) => {
 		if (twoPlayResults[resultIndex].burner === Number(playerIndex)) {
-			console.log("vcl");
-
 			return;
 		}
 

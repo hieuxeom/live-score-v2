@@ -52,10 +52,6 @@ const SignUp = () => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(signUpForm);
-	}, [signUpForm]);
-
 	return (
 		<Wrapper
 			size={"screen"}

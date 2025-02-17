@@ -29,13 +29,13 @@ const ClientLayout = () => {
 			>
 				<div className={"w-full max-w-7xl flex justify-between items-center"}>
 					<div
-						className={"h-4"}
+						className={"h-max"}
 						onClick={() => navigate(ROUTE_PATH.HOME)}
 					>
 						<img
-							src="/logow_b.png"
+							src="/logo_text_hrz.png"
 							alt=""
-							className={"h-full"}
+							className={"max-h-8 h-full"}
 						/>
 					</div>
 					<div className={"flex items-center gap-4"}>
@@ -66,6 +66,24 @@ const ClientLayout = () => {
 			</nav>
 			<div className={"bg-primary-gradient w-full"}>
 				<Outlet />
+			</div>
+			<div className={"absolute bottom-0 p-4"}>
+				<div
+					className={"h-max flex flex-col items-center gap-1 opacity-20"}
+					onClick={() => navigate(ROUTE_PATH.HOME)}
+				>
+					<Typography
+						type={"tiny"}
+						className={"text-white"}
+					>
+						Hosted by
+					</Typography>
+					<img
+						src="/logow_w.png"
+						alt=""
+						className={"max-h-4 h-full"}
+					/>
+				</div>
 			</div>
 		</div>
 	);

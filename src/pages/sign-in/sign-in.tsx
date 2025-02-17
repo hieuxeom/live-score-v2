@@ -58,10 +58,6 @@ const SignIn = () => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(signInForm);
-	}, [signInForm]);
-
 	return (
 		<Wrapper
 			size={"screen"}
