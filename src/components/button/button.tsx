@@ -31,35 +31,67 @@ const Button = ({
 	children,
 }: ButtonProps) => {
 	if (variant === "solid-3d" || variant === "bordered-3d") {
-		const generateButtonClasses = (color: ButtonProps["color"], variant: ButtonProps["variant"]) => {
+		const getButtonClasses = (color: NonNullable<ButtonProps["color"]>, variant: ButtonProps["variant"]) => {
 			if (isDisabled) {
 				return "before:bg-secondary-200 !cursor-not-allowed";
 			}
 
+			const MapSolidColor: Record<NonNullable<ButtonProps["color"]>, string> = {
+				default: "before:bg-dark-50",
+				primary: "before:bg-primary-200",
+				secondary: "before:bg-secondary-200",
+				danger: "before:bg-danger-200",
+				warning: "before:bg-warning-200",
+				success: "before:bg-success-200",
+			};
+
+			const MapBorderedColor: Record<NonNullable<ButtonProps["color"]>, string> = {
+				default: "before:bg-dark",
+				primary: "before:bg-primary",
+				secondary: "before:bg-secondary",
+				danger: "before:bg-danger",
+				warning: "before:bg-warning",
+				success: "before:bg-success",
+			};
+
 			switch (variant) {
 				case "solid-3d":
-					return color === "primary" ? "before:bg-secondary" : "before:bg-primary";
+					return MapSolidColor[color];
 
 				case "bordered-3d":
-					return `before:bg-${color}`;
+					return MapBorderedColor[color];
 			}
 		};
 
-		const generateSpanClasses = (color: ButtonProps["color"], variant: ButtonProps["variant"]) => {
+		const generateSpanClasses = (color: NonNullable<ButtonProps["color"]>, variant: ButtonProps["variant"]) => {
 			if (isDisabled) {
 				return "bg-secondary-50 text-white border-secondary-50 text-secondary-200";
 			}
 
+			const MapSolidColor: Record<NonNullable<ButtonProps["color"]>, string> = {
+				default: "bg-dark border-dark text-light",
+				primary: "bg-primary border-primary text-light",
+				secondary: "bg-secondary border-secondary text-light",
+				danger: "bg-danger border-danger text-light",
+				warning: "bg-warning border-warning text-light",
+				success: "bg-success border-success text-light",
+			};
+
+			const MapBorderedColor: Record<NonNullable<ButtonProps["color"]>, string> = {
+				default: "bg-white border-dark text-dark",
+				primary: "bg-white border-primary text-primary",
+				secondary: "bg-white border-secondary text-secondary",
+				danger: "bg-white border-danger text-danger",
+				warning: "bg-white border-warning text-warning",
+				success: "bg-white border-success text-success",
+			};
+
 			switch (variant) {
 				case "solid-3d":
-					return color === "primary"
-						? "bg-primary border-primary text-light"
-						: "bg-secondary border-secondary text-light";
+					return MapSolidColor[color];
 
 				case "bordered-3d":
-					return color === "primary"
-						? "bg-white border-primary text-primary"
-						: "bg-white border-secondary text-secondary";
+					return MapBorderedColor[color];
 			}
 		};
 
@@ -84,7 +116,7 @@ const Button = ({
 				className={clsx(
 					"group relative p-0 border-0 border-none bg-transparent box-border cursor-pointer before:content-[''] before:absolute before:left-0 before:z-[1] before:w-full before:h-full before:rounded-xl",
 					fullWidth ? "w-full" : "w-max",
-					generateButtonClasses(color, variant),
+					getButtonClasses(color, variant),
 					generateButtonSizeClasses[size]
 				)}
 				disabled={isDisabled}

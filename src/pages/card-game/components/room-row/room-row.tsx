@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router";
-import { TRoomInfo } from "../../../../types/cardgame";
-import { useCookies } from "react-cookie";
-import ROUTE_PATH from "../../../../configs/routes.config";
-import Typography from "../../../../components/typography";
 import Button from "../../../../components/button";
+import Typography from "../../../../components/typography";
 import ICON_CONFIG from "../../../../configs/icon.config";
+import ROUTE_PATH from "../../../../configs/routes.config";
+import { TRoomInfo } from "../../../../types/cardgame";
 
 interface RoomRowProps {
 	roomInfo: TRoomInfo;
@@ -13,15 +12,13 @@ interface RoomRowProps {
 const RoomRow = ({ roomInfo }: RoomRowProps) => {
 	const navigate = useNavigate();
 
-	const [cookies] = useCookies(["username"]);
-
 	const handleEnterRoom = () => {
 		navigate(ROUTE_PATH.CARD_GAME.GAME_ROOM(roomInfo.room_id));
 	};
 
 	return (
 		<div
-			onClick={cookies.username && handleEnterRoom}
+			onClick={handleEnterRoom}
 			className={
 				"w-full p-4 flex justify-between items-center border-secondary border-b-8 border-2 rounded-2xl hover:border-secondary transtion-all duration-300 cursor-pointer"
 			}
@@ -85,15 +82,15 @@ const RoomRow = ({ roomInfo }: RoomRowProps) => {
 						Phòng đã đóng
 					</Typography>
 				) : (
-					cookies.username && (
-						<Button
-							onClick={handleEnterRoom}
-							isIconOnly={true}
-							color={"secondary"}
-							size={"xl"}
-							startIcon={ICON_CONFIG.JOIN_ROOM}
-						></Button>
-					)
+					// cookies.username && (
+					<Button
+						onClick={handleEnterRoom}
+						isIconOnly={true}
+						color={"secondary"}
+						size={"xl"}
+						startIcon={ICON_CONFIG.JOIN_ROOM}
+					></Button>
+					// )
 				)}
 			</div>
 		</div>

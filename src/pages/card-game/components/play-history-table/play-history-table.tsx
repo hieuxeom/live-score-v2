@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { THistoryScoreBoard, TMatchHistory, TRoomInfo, TPlayHistory, TTwoPlayResult } from "../../../../types/cardgame";
 import FirstPlaceMedal from "../../../../components/icon-svg/first-place-medal";
 import BurnBlackTwo from "../../../../components/icon-svg/burn-black-two";
@@ -149,7 +149,6 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 						</Typography>
 					</div>
 					<div className={"flex items-center gap-2"}>
-						{/* {MatchHistoryDisplayType.map((item) => ( */}
 						<Radio
 							textValue={"Biểu tượng"}
 							value={"icon"}
@@ -249,74 +248,74 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 						className={""}
 						emptyMessage={"Chưa chơi trận nào"}
 					>
-						{Array.from(new Set(matchResults.map((item) => item.match_id))).map((matchId, index) => (
-							<TableRow key={index}>
-								<TableCell
-									borderType={"full"}
-									className={"text-center border-primary relative"}
-								>
-									Ván {matchId}
-									{roomInfo.created_by === cookies.user_id && (
-										<Button
-											isIconOnly
-											size={"lg"}
-											startIcon={ICON_CONFIG.CLOSE}
-											variant={"light"}
-											color={"danger"}
-											className={"absolute top-1/2 left-2 -translate-y-1/2"}
-											onClick={() => handleDeleteResults(matchId)}
-										/>
-									)}
-								</TableCell>
-								<TableCell
-									borderType={"full"}
-									className={"text-center border-primary h-16"}
-								>
-									<div className={"flex items-center gap-0.5 justify-center"}>
-										{displayType === "icon"
-											? MapResultIcon(getMatchData(1, matchId), getTwoPlayResult(1, matchId))
-											: historyScoreBoard[index][0]}
-									</div>
-								</TableCell>
-								<TableCell
-									borderType={"full"}
-									className={"text-center border-primary h-16"}
-								>
-									<div className={"flex items-center gap-0.5 justify-center"}>
-										{displayType === "icon"
-											? MapResultIcon(getMatchData(2, matchId), getTwoPlayResult(2, matchId))
-											: historyScoreBoard[index][1]}
-									</div>
-								</TableCell>
-								<TableCell
-									borderType={"full"}
-									className={"text-center border-primary h-16"}
-								>
-									<div className={"flex items-center gap-0.5 justify-center"}>
-										{displayType === "icon"
-											? MapResultIcon(getMatchData(3, matchId), getTwoPlayResult(3, matchId))
-											: historyScoreBoard[index][2]}
-									</div>
-								</TableCell>
-								<TableCell
-									borderType={"full"}
-									className={"text-center border-primary h-16"}
-								>
-									<div className={"flex items-center gap-0.5 justify-center"}>
-										{displayType === "icon"
-											? MapResultIcon(getMatchData(4, matchId), getTwoPlayResult(4, matchId))
-											: historyScoreBoard[index][3]}
-									</div>
-								</TableCell>
-							</TableRow>
-						))}
+						{Array.from(new Set(matchResults.map((item) => item.match_id)))
+							.reverse()
+							.map((matchId, index) => (
+								<TableRow>
+									<TableCell
+										borderType={"full"}
+										className={"text-center border-primary relative"}
+									>
+										Ván {matchId}
+										{roomInfo.created_by === cookies.user_id && (
+											<Button
+												isIconOnly
+												size={"lg"}
+												startIcon={ICON_CONFIG.CLOSE}
+												variant={"light"}
+												color={"danger"}
+												className={"absolute top-1/2 left-2 -translate-y-1/2"}
+												onClick={() => handleDeleteResults(matchId)}
+											/>
+										)}
+									</TableCell>
+									<TableCell
+										borderType={"full"}
+										className={"text-center border-primary h-16"}
+									>
+										<div className={"flex items-center gap-0.5 justify-center"}>
+											{displayType === "icon"
+												? MapResultIcon(getMatchData(1, matchId), getTwoPlayResult(1, matchId))
+												: historyScoreBoard[index][0]}
+										</div>
+									</TableCell>
+									<TableCell
+										borderType={"full"}
+										className={"text-center border-primary h-16"}
+									>
+										<div className={"flex items-center gap-0.5 justify-center"}>
+											{displayType === "icon"
+												? MapResultIcon(getMatchData(2, matchId), getTwoPlayResult(2, matchId))
+												: historyScoreBoard[index][1]}
+										</div>
+									</TableCell>
+									<TableCell
+										borderType={"full"}
+										className={"text-center border-primary h-16"}
+									>
+										<div className={"flex items-center gap-0.5 justify-center"}>
+											{displayType === "icon"
+												? MapResultIcon(getMatchData(3, matchId), getTwoPlayResult(3, matchId))
+												: historyScoreBoard[index][2]}
+										</div>
+									</TableCell>
+									<TableCell
+										borderType={"full"}
+										className={"text-center border-primary h-16"}
+									>
+										<div className={"flex items-center gap-0.5 justify-center"}>
+											{displayType === "icon"
+												? MapResultIcon(getMatchData(4, matchId), getTwoPlayResult(4, matchId))
+												: historyScoreBoard[index][3]}
+										</div>
+									</TableCell>
+								</TableRow>
+							))}
 					</TableBody>
 				</TableWrapper>
 			</div>
 		</div>
 	);
 };
-
-PlayHistoryTable.defaultProps = {};
 
 export default PlayHistoryTable;

@@ -75,6 +75,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"secondPlacePoint"}
@@ -96,6 +97,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"thirdPlacePoint"}
@@ -117,6 +119,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"firstPlacePoint"}
@@ -138,6 +141,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"firstPlacePoint"}
@@ -159,6 +163,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"secondPlacePoint"}
@@ -180,6 +185,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"thirdPlacePoint"}
@@ -201,6 +207,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 					<Input
 						id={"sweptOutPoint"}
@@ -222,6 +229,7 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 								điểm
 							</Typography>
 						}
+						isDisabled={cookies.user_id !== roomDetails.created_by}
 					/>
 				</div>
 			</div>

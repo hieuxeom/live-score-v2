@@ -10,6 +10,7 @@ import {
 	TSocketNewResult,
 	TSocketUpdatedRoomConfig,
 	TSocketDeleteResult,
+	TSocketCloseRoom,
 } from "../../../types/cardgame";
 import { IAPIResponse } from "../../../types/general";
 import API_ROUTES from "../../../configs/api-routes.config";
@@ -32,7 +33,7 @@ import SOCKET_EVENT_NAMES from "../../../configs/socket-event-names.config";
 const GameRoom = () => {
 	const socket = useSocket();
 
-	const [cookies] = useCookies(["username"]);
+	const [cookies] = useCookies(["username", "user_id"]);
 
 	const { roomId } = useParams();
 
@@ -72,14 +73,16 @@ const GameRoom = () => {
 	const handleCloseRoom = () => {
 		if (!roomId) return;
 
-		return axios
-			.patch<IAPIResponse>(API_ROUTES.GAME_CARD.CLOSE_ROOM(roomId))
-			.then((response) => response.data)
-			.then((response) => {
-				if (response.status === "success") {
-					getRoomInfo();
-				}
-			});
+		socket.emit(SOCKET_EVENT_NAMES.CLOSE_ROOM.SEND, { roomId, closedBy: cookies.username });
+
+		// return axios
+		// 	.patch<IAPIResponse>(API_ROUTES.GAME_CARD.CLOSE_ROOM(roomId))
+		// 	.then((response) => response.data)
+		// 	.then((response) => {
+		// 		if (response.status === "success") {
+		// 			getRoomInfo();
+		// 		}
+		// 	});
 	};
 
 	const handleLeaveRoom = () => {
@@ -90,8 +93,9 @@ const GameRoom = () => {
 	useEffect(() => {
 		Promise.all([getRoomInfo(), getRoomResults()]).then(() => {});
 
+		// if (cookies.username) {
 		socket.emit(SOCKET_EVENT_NAMES.JOIN_CARDGAME_ROOM, { roomId, username: cookies.username });
-
+		// }
 		socket.on(SOCKET_EVENT_NAMES.PLAYER_CHANGE, (data: TSocketPlayerChange) => {
 			setCurrentInRoom(data.currentInRoom);
 			setPlayersInRoom(data.playersInRoom);
@@ -113,14 +117,16 @@ const GameRoom = () => {
 			toast.success(`${response.deleteBy} vừa xóa kết quả`);
 			setRoomResults(response.roomResults);
 		});
-	}, []);
 
-	useEffect(() => {
-		if (!cookies.username) {
-			toast.error("Vui lòng đăng nhập để tham gia phòng");
-			navigate(ROUTE_PATH.CARD_GAME.INDEX);
-		}
-	}, [cookies]);
+		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TSocketCloseRoom) => {
+			toast.error(`${response.closedBy} đã đóng phòng`);
+			setRoomInfo(response.roomDetails);
+		});
+
+		return () => {
+			socket.emit(SOCKET_EVENT_NAMES.LEAVE_CARDGAME_ROOM, { roomId, username: cookies.username });
+		};
+	}, []);
 
 	return (
 		<>
@@ -158,7 +164,7 @@ const GameRoom = () => {
 										Tạo bởi {roomInfo.username}
 									</Typography>
 								</div>
-								<div className={"flex items-center gap-2"}>
+								<div className={"flex items-center gap-4"}>
 									<Typography type={"large"}>
 										<strong className={"text-primary"}>{currentInRoom}</strong> trong phòng
 									</Typography>
@@ -170,18 +176,22 @@ const GameRoom = () => {
 											Phòng đã bị đóng
 										</Typography>
 									) : (
-										<Button
-											size={"lg"}
-											color={"danger"}
-											onClick={() => handleCloseRoom()}
-											startIcon={ICON_CONFIG.CLOSE_ROOM}
-										>
-											Đóng phòng
-										</Button>
+										cookies.user_id === roomInfo.created_by && (
+											<Button
+												size={"lg"}
+												color={"danger"}
+												variant={"solid-3d"}
+												onClick={() => handleCloseRoom()}
+												startIcon={ICON_CONFIG.CLOSE_ROOM}
+											>
+												Đóng phòng
+											</Button>
+										)
 									)}
 									<Button
 										size={"lg"}
 										color={"secondary"}
+										variant={"solid-3d"}
 										onClick={handleLeaveRoom}
 										endIcon={ICON_CONFIG.LEAVE_ROOM}
 									>
@@ -201,19 +211,23 @@ const GameRoom = () => {
 										historyScoreBoard={roomResults.historyScoreBoard}
 									/>
 									<div className={"flex flex-col gap-4"}>
-										<div className={"w-full h-[10vh] bg-light p-4 rounded-2xl shadow-primary-1"}>
-											<Button
-												fullWidth
-												variant={"solid-3d"}
-												color={"primary"}
-												startIcon={ICON_CONFIG.NEW}
-												size={"lg"}
-												onClick={() => setIsShowModal(true)}
-												isDisabled={roomInfo.is_closed === 1}
+										{cookies.username && (
+											<div
+												className={"w-full h-[10vh] bg-light p-4 rounded-2xl shadow-primary-1"}
 											>
-												Thêm kết quả mới
-											</Button>
-										</div>
+												<Button
+													fullWidth
+													variant={"solid-3d"}
+													color={"primary"}
+													startIcon={ICON_CONFIG.NEW}
+													size={"lg"}
+													onClick={() => setIsShowModal(true)}
+													isDisabled={roomInfo.is_closed === 1}
+												>
+													Thêm kết quả mới
+												</Button>
+											</div>
+										)}
 										<div
 											className={
 												"bg-white p-8 shadow-primary-1 rounded-2xl col-span-1 w-full h-[35vh] flex flex-col gap-2"

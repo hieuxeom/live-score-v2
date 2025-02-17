@@ -67,7 +67,7 @@ const ClientLayout = () => {
 			<div className={"bg-primary-gradient w-full"}>
 				<Outlet />
 			</div>
-			<div className={"absolute bottom-0 p-4"}>
+			<div className={"absolute bottom-0 my-4"}>
 				<div
 					className={"h-max flex flex-col items-center gap-1 opacity-20"}
 					onClick={() => navigate(ROUTE_PATH.HOME)}

@@ -16,21 +16,23 @@ interface InputProps {
 	errorMessage?: string;
 	startContent?: React.ReactNode;
 	endContent?: React.ReactNode;
+	isDisabled?: boolean;
 }
 
 const Input = ({
 	type = "text",
 	id,
 	name,
-	validator,
+	label,
+	labelPlacement = "top",
 	placeholder,
+	onChange,
+	value,
+	validator,
 	errorMessage,
 	startContent,
 	endContent,
-	label,
-	labelPlacement = "top",
-	onChange,
-	value,
+	isDisabled = false,
 }: InputProps) => {
 	const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -68,6 +70,7 @@ const Input = ({
 							{
 								"!border-danger": validator && !handleValidator(),
 								"!border-secondary": isFocus && handleValidator() && value.length === 0,
+								"bg-secondary-400 text-light": isDisabled,
 							}
 						)}
 					>
@@ -91,8 +94,10 @@ const Input = ({
 							"!border-secondary": value.length !== 0 && handleValidator(),
 							"!rounded-s-none !border-l-0": startContent,
 							"!rounded-e-none !border-r-0": endContent,
+							"bg-secondary-400 text-light": isDisabled,
 						}
 					)}
+					disabled={isDisabled}
 				/>
 				{endContent && (
 					<div
@@ -100,8 +105,9 @@ const Input = ({
 							"h-full px-4 py-2 border transition-colors duration-300",
 							"border-l-0 border-secondary/50 rounded-e-xl border-b-4 group-hover:border-secondary",
 							{
-								"!border-secondary": isFocus && handleValidator() && value.length === 0,
+								"!border-secondary": isFocus || value.length > 0,
 								"!border-danger": validator && !handleValidator(),
+								"bg-secondary-400 text-light": isDisabled,
 							}
 						)}
 					>

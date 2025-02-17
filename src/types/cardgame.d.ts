@@ -123,3 +123,8 @@ export type TSocketUpdatedRoomConfig = {
 	updatedBy: string;
 	roomDetails: TRoomInfo;
 };
+
+export type TSocketCloseRoom = {
+	closeBy: string;
+	roomDetails: TRoomInfo;
+};

@@ -15,6 +15,10 @@ const SOCKET_EVENT_NAMES = {
 		SEND: "createNewRoom",
 		RECEIVE: "roomCreated",
 	},
+	CLOSE_ROOM: {
+		SEND: "closeRoom",
+		RECEIVE: "roomClosed",
+	},
 	JOIN_CARDGAME_ROOM: "joinCGRoom",
 	LEAVE_CARDGAME_ROOM: "outCGRoom",
 	PLAYER_CHANGE: "playerChange",
