@@ -32,7 +32,7 @@ const ModalWrapper = ({ title, isShowModal = false, setIsShowModal, classNames, 
 			></div>
 			<div
 				className={clsx(
-					"modal absolute z-20 w-full h-full flex items-center justify-center gap-4",
+					"modal absolute z-20 w-full h-full flex top-16 justify-center gap-4",
 					classNames && classNames.modal,
 					{
 						showModal: isShowModal,

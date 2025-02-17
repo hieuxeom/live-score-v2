@@ -1,6 +1,7 @@
 import Typography from "../../../../components/typography";
 import { RESULT_DRAG_ITEMS } from "../drag-items";
 interface PlayerResultRowProps {
+	playerName: string;
 	onDrop: (e: React.DragEvent) => void;
 	onDragOver: (e: React.DragEvent) => void;
 	playerIndex: number;
@@ -8,25 +9,42 @@ interface PlayerResultRowProps {
 	onRemoveValue: (e: string) => void;
 }
 
-const PlayerResultRow = ({ onDrop, onDragOver, playerIndex, value, onRemoveValue }: PlayerResultRowProps) => {
+const PlayerResultRow = ({
+	playerName,
+	onDrop,
+	onDragOver,
+	playerIndex,
+	value,
+	onRemoveValue,
+}: PlayerResultRowProps) => {
 	return (
 		<div className={"flex items-center gap-4"}>
-			<div className={"min-w-max px-6 py-2 bg-dark text-light rounded-2xl"}>
-				<Typography type={"h3"}>Player {playerIndex}</Typography>
+			<div className={"w-40 text-center py-2 bg-secondary text-light rounded-xl"}>
+				<Typography type={"large"}>{playerName}</Typography>
 			</div>
 			<div
-				className={"w-full flex flex-wrap items-center gap-2 p-2 rounded-2xl border-2 border-secondary-base"}
+				className={"w-full flex flex-wrap items-center gap-2 p-1 rounded-xl border-2 border-secondary"}
 				onDrop={onDrop}
 				onDragOver={onDragOver}
 				data-player-index={playerIndex.toString()}
 			>
 				{value.length < 1 ? (
-					<Typography className={"italic"}>Chưa ghi nhận kết quả nào</Typography>
+					<div
+						// key={`player-${playerIndex}-result-${item}`}
+						className={"px-2 py-1 text-dark rounded-lg cursor-grab"}
+					>
+						<Typography
+							type={"small"}
+							className={"italic"}
+						>
+							Chưa ghi nhận kết quả nào
+						</Typography>
+					</div>
 				) : (
 					value.map((item) => (
 						<div
 							key={`player-${playerIndex}-result-${item}`}
-							className={"px-4 py-1 bg-dark w-max text-light rounded-lg cursor-grab"}
+							className={"px-4 py-1 bg-primary w-max text-light rounded-lg cursor-grab"}
 							onClick={() => onRemoveValue(item)}
 						>
 							<Typography type={"small"}>

@@ -18,10 +18,10 @@ interface ModalAddResultProps {
 	isShowModal: boolean;
 	setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 	matchHistory: TMatchHistory[];
-	roomDetails: TRoomInfo;
+	roomInfo: TRoomInfo;
 }
 
-const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddResultProps) => {
+const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResultProps) => {
 	const { roomId } = useParams();
 
 	const [cookies] = useCookies(["username"]);
@@ -42,13 +42,13 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 	const getPlayerName = (playerIndex: number) => {
 		switch (playerIndex) {
 			case 1:
-				return roomDetails.player1_name;
+				return roomInfo.player1_name;
 			case 2:
-				return roomDetails.player2_name;
+				return roomInfo.player2_name;
 			case 3:
-				return roomDetails.player3_name;
+				return roomInfo.player3_name;
 			case 4:
-				return roomDetails.player4_name;
+				return roomInfo.player4_name;
 			default:
 				return "";
 		}
@@ -75,16 +75,17 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 
 	const handleMapPlayerResult = (resultData: string[]): TPostPlayerResult => {
 		const resultObj: TPostPlayerResult = {
-			rank:
-				resultData.includes("firstPlace") || resultData.includes("winAll")
-					? 1
-					: resultData.includes("secondPlace")
-					? 2
-					: resultData.includes("thirdPlace")
-					? 3
-					: resultData.includes("fourthPlace") || resultData.includes("burntOut")
-					? 4
-					: 0,
+			rank: resultData.includes("noResult")
+				? 0
+				: resultData.includes("firstPlace") || resultData.includes("winAll")
+				? 1
+				: resultData.includes("secondPlace")
+				? 2
+				: resultData.includes("thirdPlace")
+				? 3
+				: resultData.includes("fourthPlace") || resultData.includes("burntOut")
+				? 4
+				: 0,
 			win_all: resultData.includes("winAll") ? 1 : 0,
 			burnt_out: resultData.includes("burntOut") ? 1 : 0,
 			swept_out: resultData.includes("sweptOut") ? 1 : 0,
@@ -155,6 +156,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 			default:
 				break;
 		}
+		setAvailableDragResults([]);
 	};
 
 	const handleNormalResult = (playerIndex: number, playerResult: string) => {
@@ -181,23 +183,46 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 
 		const playerIndex = e.currentTarget.getAttribute("data-player-index");
 
-		if (SPECIAL_RESULT.find((_v) => _v.key === playerResult)) {
+		if (SPECIAL_RESULT.some((_v) => _v.key === playerResult)) {
 			if (playerResult === "winAll") {
 				return handleWinAllResult(Number(playerIndex));
 			}
 		}
 
-		if (BASE_RESULT.find((_v) => _v.key === playerResult)) {
-			setAvailableDragResults((prev) => prev.filter((_v) => _v.key !== playerResult));
+		if (BASE_RESULT.some((_v) => _v.key === playerResult)) {
 			handleNormalResult(Number(playerIndex), playerResult);
 		}
 	};
 
+	useEffect(() => {
+		const currentSelectedResults = [player1DragValue, player2DragValue, player3DragValue, player4DragValue].flat();
+
+		if (currentSelectedResults.length === 0) {
+			setAvailableDragResults(RESULT_DRAG_ITEMS);
+		} else {
+			if (currentSelectedResults.includes("winAll")) {
+				setAvailableDragResults([]);
+			} else {
+				setAvailableDragResults(
+					BASE_RESULT.filter((_v) => !currentSelectedResults.includes(_v.key) || _v.key === "burntOut")
+				);
+			}
+		}
+	}, [player1DragValue, player2DragValue, player3DragValue, player4DragValue]);
+
 	const handleRemovePlayerResult = (playerIndex: number, playerResult: string) => {
-		setAvailableDragResults((prev) => [
-			...prev,
-			{ key: playerResult, value: RESULT_DRAG_ITEMS.find((_v) => _v.key === playerResult)?.value || "" },
-		]);
+		if (playerResult === "winAll") {
+			setAvailableDragResults(RESULT_DRAG_ITEMS);
+			setPlayer1DragValue([]);
+			setPlayer2DragValue([]);
+			setPlayer3DragValue([]);
+			setPlayer4DragValue([]);
+		} else {
+			setAvailableDragResults((prev) => [
+				...prev,
+				{ key: playerResult, value: RESULT_DRAG_ITEMS.find((_v) => _v.key === playerResult)?.value || "" },
+			]);
+		}
 
 		switch (playerIndex) {
 			case 1:
@@ -273,6 +298,31 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 		setTwoPlayResults((prev) => prev.filter((_, index) => index !== row));
 	};
 
+	const validResultData = () => {
+		if (
+			player1DragValue.length === 0 ||
+			player2DragValue.length === 0 ||
+			player3DragValue.length === 0 ||
+			player4DragValue.length === 0
+		) {
+			return false;
+		}
+
+		if (twoPlayResults.length > 0) {
+			const isTwoPlayResultValid = twoPlayResults.every(
+				(_v) => _v.burner !== 0 && _v.taker !== 0 && _v.quantity !== 0
+			);
+
+			if (!isTwoPlayResultValid) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+
+		return true;
+	};
+
 	useEffect(() => {
 		if (isShowModal) {
 			resetData();
@@ -298,6 +348,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 				<div className={"w-full flex items-start gap-4"}>
 					<div className="w-2/3 flex flex-col gap-4 pr-4 border-r border-r-muted">
 						<PlayerResultRow
+							playerName={roomInfo.player1_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={1}
@@ -305,6 +356,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 							onRemoveValue={(item: string) => handleRemovePlayerResult(1, item)}
 						/>
 						<PlayerResultRow
+							playerName={roomInfo.player2_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={2}
@@ -312,6 +364,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 							onRemoveValue={(item: string) => handleRemovePlayerResult(2, item)}
 						/>
 						<PlayerResultRow
+							playerName={roomInfo.player3_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={3}
@@ -319,6 +372,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 							onRemoveValue={(item: string) => handleRemovePlayerResult(3, item)}
 						/>
 						<PlayerResultRow
+							playerName={roomInfo.player4_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
 							playerIndex={4}
@@ -330,7 +384,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 						{availableDragResults.map((item) => (
 							<div
 								key={item.key}
-								className={"px-8 py-2 bg-secondary text-light rounded-xl cursor-grab"}
+								className={"px-8 py-2 bg-primary text-light rounded-xl cursor-grab"}
 								draggable={true}
 								onDragStart={(e) => handleOnDragMatchResult(e, item.key)}
 							>
@@ -346,10 +400,11 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 					<div className={"flex items-center gap-2"}>
 						<Typography type={"h2"}>Kết quả chặt heo</Typography>
 						<Button
-							size={"lg"}
+							size={"md"}
 							className={"px-4"}
-							startIcon={<IoMdAdd size={20} />}
-							color={"secondary"}
+							startIcon={ICON_CONFIG.NEW}
+							color={"primary"}
+							variant={"solid-3d"}
 							onClick={handleAddTwoPlayResultRow}
 						>
 							Thêm kết quả
@@ -372,16 +427,16 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 									/>
 									<Typography type={"h5"}>Bị chặt/cháy</Typography>
 									<Button
-										size={"lg"}
-										className={"px-4"}
+										size={"sm"}
+										className={"min-w-24 px-4"}
 										color={"secondary"}
 										onClick={() => handleChangeQuantity(index, item.quantity === 1 ? 2 : 1)}
 									>
 										{item.quantity} con
 									</Button>
 									<Button
-										size={"lg"}
-										className={"px-4"}
+										size={"sm"}
+										className={"min-w-24 px-4"}
 										color={item.two_color === "red" ? "danger" : "default"}
 										onClick={() =>
 											handleChangeColor(index, item.two_color === "red" ? "black" : "red")
@@ -416,10 +471,12 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomDetails }: ModalAddRe
 			<footer>
 				<Button
 					variant={"solid-3d"}
-					color={"primary"}
+					color={"success"}
 					size={"xl"}
 					fullWidth
+					isDisabled={!validResultData()}
 					onClick={() => handleSaveNewMatchResult()}
+					// onClick={() => console.log(validResultData())}
 				>
 					Lưu
 				</Button>

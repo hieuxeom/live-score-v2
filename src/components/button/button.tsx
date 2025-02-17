@@ -143,7 +143,7 @@ const Button = ({
 				"border-primary bg-primary text-light hover:bg-primary/95 hover:border-primary/40 transition-all duration-300 ease-in-out",
 			secondary:
 				"border-secondary bg-secondary text-light hover:bg-secondary/95 hover:border-secondary/40 transition-all duration-300 ease-in-out",
-			danger: "border-2 border-danger bg-danger text-light hover:bg-danger/95 hover:border-danger/40 transition-all duration-300 ease-in-out",
+			danger: "border-danger bg-danger text-light hover:bg-danger/95 hover:border-danger/40 transition-all duration-300 ease-in-out",
 			warning:
 				"border-warning bg-warning text-light hover:bg-warning/95 hover:border-warning/40 transition-all duration-300 ease-in-out",
 			success:

@@ -15,6 +15,14 @@ export const BASE_RESULT = [
 		key: "fourthPlace",
 		value: "Bét",
 	},
+	{
+		key: "burntOut",
+		value: "Cháy 13 lá",
+	},
+	{
+		key: "noResult",
+		value: "Không",
+	},
 ];
 
 export const SPECIAL_RESULT = [
@@ -25,10 +33,6 @@ export const SPECIAL_RESULT = [
 	{
 		key: "sweptOut",
 		value: "Thua tới trắng",
-	},
-	{
-		key: "burntOut",
-		value: "Cháy 13 lá",
 	},
 ];
 

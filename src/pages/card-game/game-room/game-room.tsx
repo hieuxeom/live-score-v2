@@ -74,15 +74,6 @@ const GameRoom = () => {
 		if (!roomId) return;
 
 		socket.emit(SOCKET_EVENT_NAMES.CLOSE_ROOM.SEND, { roomId, closedBy: cookies.username });
-
-		// return axios
-		// 	.patch<IAPIResponse>(API_ROUTES.GAME_CARD.CLOSE_ROOM(roomId))
-		// 	.then((response) => response.data)
-		// 	.then((response) => {
-		// 		if (response.status === "success") {
-		// 			getRoomInfo();
-		// 		}
-		// 	});
 	};
 
 	const handleLeaveRoom = () => {
@@ -256,7 +247,7 @@ const GameRoom = () => {
 						isShowModal={isShowModal}
 						setIsShowModal={setIsShowModal}
 						matchHistory={roomResults?.playHistory.matchResults || []}
-						roomDetails={roomInfo}
+						roomInfo={roomInfo}
 					/>
 				</Wrapper>
 			)}
