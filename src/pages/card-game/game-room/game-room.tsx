@@ -211,7 +211,7 @@ const GameRoom = () => {
 										historyScoreBoard={roomResults.historyScoreBoard}
 									/>
 									<div className={"flex flex-col gap-4"}>
-										{cookies.username && (
+										{!roomInfo.is_closed && cookies.username && (
 											<div
 												className={"w-full h-[10vh] bg-light p-4 rounded-2xl shadow-primary-1"}
 											>
@@ -222,7 +222,6 @@ const GameRoom = () => {
 													startIcon={ICON_CONFIG.NEW}
 													size={"lg"}
 													onClick={() => setIsShowModal(true)}
-													isDisabled={roomInfo.is_closed === 1}
 												>
 													Thêm kết quả mới
 												</Button>
