@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 interface SelectProps {
 	name: string;
 	label?: string;

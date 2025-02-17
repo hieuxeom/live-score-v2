@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -6,12 +7,11 @@ import Button from "../../components/button";
 import Input from "../../components/input";
 import Typography from "../../components/typography";
 import Wrapper from "../../components/wrapper";
+import API_ROUTES from "../../configs/api-routes.config";
 import ROUTE_PATH from "../../configs/routes.config";
 import useAxios from "../../hooks/useAxios";
 import { TSignIn, TSignInResponse } from "../../types/auth";
 import { IAPIResponse, TBaseVariants } from "../../types/general";
-import API_ROUTES from "../../configs/api-routes.config";
-import clsx from "clsx";
 
 // interface SignInProps {}
 
