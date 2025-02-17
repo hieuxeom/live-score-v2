@@ -125,6 +125,7 @@ export type TSocketUpdatedRoomConfig = {
 };
 
 export type TSocketCloseRoom = {
-	closeBy: string;
+	closedBy: string;
 	roomDetails: TRoomInfo;
+	listRooms: TRoomInfo[];
 };

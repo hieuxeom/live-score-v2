@@ -43,6 +43,10 @@ const CardGame = () => {
 		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
 			return setListRooms(response.listRooms);
 		});
+
+		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+			return setListRooms(response.listRooms);
+		});
 	}, []);
 
 	return (
