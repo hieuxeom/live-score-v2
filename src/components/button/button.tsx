@@ -167,7 +167,7 @@ const Button = ({
 
 		return (
 			<div
-				onClick={onClick}
+				onClick={!isDisabled ? onClick : undefined}
 				className={clsx(
 					className,
 					MapDivClasses[variant],
@@ -177,6 +177,7 @@ const Button = ({
 						"w-full": fullWidth,
 						"w-max": !fullWidth,
 						"!bg-transparent !p-2": !showBackground,
+						"opacity-50 !cursor-not-allowed": isDisabled,
 					}
 				)}
 			>

@@ -40,6 +40,9 @@ const Input = ({
 	};
 
 	const handleValidator = () => {
+		if (value === "") {
+			return true;
+		}
 		if (validator) {
 			return validator(value);
 		}
@@ -50,7 +53,9 @@ const Input = ({
 		<div className={clsx("w-full", MapWrapperClasses[labelPlacement])}>
 			<label
 				htmlFor={id}
-				className={"min-w-max"}
+				className={clsx("min-w-max", {
+					"!text-danger": validator && !handleValidator(),
+				})}
 			>
 				<Typography type={"p"}>{label}</Typography>
 			</label>
@@ -59,11 +64,10 @@ const Input = ({
 					<div
 						className={clsx(
 							"h-full px-4 py-2 border transition-colors duration-300",
-							"border-secondary-base/50 rounded-s-xl border-b-4 group-hover:border-secondary-base ",
+							"border-secondary/50 rounded-s-xl border-b-4 group-hover:border-secondary ",
 							{
-								"!border-danger-base": validator && !handleValidator(),
-								"!border-success-base": validator && handleValidator() && value.length > 0,
-								"!border-secondary-base": isFocus && handleValidator() && value.length === 0,
+								"!border-danger": validator && !handleValidator(),
+								"!border-secondary": isFocus && handleValidator() && value.length === 0,
 							}
 						)}
 					>
@@ -80,11 +84,11 @@ const Input = ({
 					onBlur={() => setIsFocus(false)}
 					placeholder={placeholder}
 					className={clsx(
-						"w-full px-4 py-2 border border-secondary-base/50 rounded-xl border-b-4 outline-none transition-colors duration-300",
-						"focus:border-secondary-base hover:border-secondary-base",
+						"w-full px-4 py-2 border border-secondary/50 rounded-xl border-b-4 outline-none transition-colors duration-300",
+						"focus:border-secondary hover:border-secondary",
 						{
-							"!border-danger-base": validator && !handleValidator(),
-							"!border-success-base": validator && handleValidator() && value.length > 0,
+							"!border-danger text-danger": validator && !handleValidator(),
+							"!border-secondary": value.length !== 0 && handleValidator(),
 							"!rounded-s-none !border-l-0": startContent,
 							"!rounded-e-none !border-r-0": endContent,
 						}
@@ -94,11 +98,10 @@ const Input = ({
 					<div
 						className={clsx(
 							"h-full px-4 py-2 border transition-colors duration-300",
-							"border-l-0 border-secondary-base/50 rounded-e-xl border-b-4 group-hover:border-secondary-base",
+							"border-l-0 border-secondary/50 rounded-e-xl border-b-4 group-hover:border-secondary",
 							{
-								"!border-secondary-base": isFocus && handleValidator() && value.length === 0,
-								"!border-danger-base": validator && !handleValidator(),
-								"!border-success-base": validator && handleValidator() && value.length > 0,
+								"!border-secondary": isFocus && handleValidator() && value.length === 0,
+								"!border-danger": validator && !handleValidator(),
 							}
 						)}
 					>
@@ -106,13 +109,10 @@ const Input = ({
 					</div>
 				)}
 			</div>
-			{validator && (
+			{validator && !handleValidator() && value !== "" && errorMessage && (
 				<Typography
 					type={"tiny"}
-					className={clsx("text-danger-base italic", {
-						visible: !handleValidator(),
-						invisible: handleValidator(),
-					})}
+					className={clsx("text-danger italic mt-2 visible")}
 				>
 					{errorMessage}
 				</Typography>

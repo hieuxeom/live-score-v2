@@ -11,6 +11,7 @@ import ROUTE_PATH from "../../configs/routes.config";
 import useAxios from "../../hooks/useAxios";
 import { TSignUp } from "../../types/auth";
 import { TBaseVariants } from "../../types/general";
+import { validateConfirmPassword, validateEmail, validatePassword } from "../../utils/validations";
 
 // interface SignUpProps {}
 
@@ -49,6 +50,27 @@ const SignUp = () => {
 		} else {
 			setCurrentSignUpMethod("email");
 			setSignUpForm((prev) => ({ ...prev, username: null }));
+		}
+	};
+
+	const validateSignUpForm = () => {
+		if (currentSignUpMethod === "email") {
+			if (!signUpForm.email || !signUpForm.password || !signUpForm.confirm_password) {
+				console.log("empty");
+
+				return false;
+			}
+
+			return (
+				validateEmail(signUpForm.email) &&
+				validatePassword(signUpForm.password) &&
+				validateConfirmPassword(signUpForm.password, signUpForm.confirm_password)
+			);
+		} else {
+			return (
+				validatePassword(signUpForm.password) &&
+				validateConfirmPassword(signUpForm.password, signUpForm.confirm_password)
+			);
 		}
 	};
 
@@ -120,6 +142,8 @@ const SignUp = () => {
 						name={"email"}
 						value={signUpForm.email || ""}
 						onChange={(e) => setSignUpForm((prev) => ({ ...prev, email: e.target.value }))}
+						validator={validateEmail}
+						errorMessage={"Email không hợp lệ"}
 					/>
 				) : (
 					<Input
@@ -136,6 +160,8 @@ const SignUp = () => {
 					name={"password"}
 					value={signUpForm.password}
 					onChange={(e) => setSignUpForm((prev) => ({ ...prev, password: e.target.value }))}
+					validator={validatePassword}
+					errorMessage={"Mật khẩu chưa đủ mạnh, cần ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường và 1 số"}
 				/>
 				<Input
 					type={"password"}
@@ -143,6 +169,8 @@ const SignUp = () => {
 					name={"confirm_password"}
 					value={signUpForm.confirm_password}
 					onChange={(e) => setSignUpForm((prev) => ({ ...prev, confirm_password: e.target.value }))}
+					validator={(e: string) => validateConfirmPassword(signUpForm.password, e)}
+					errorMessage={"Password không khớp"}
 				/>
 				<div className={"flex items-center justify-between"}>
 					<div className={"flex items-center gap-2"}>
@@ -160,6 +188,7 @@ const SignUp = () => {
 						size={"md"}
 						color={"primary"}
 						onClick={handleSignUp}
+						isDisabled={!validateSignUpForm()}
 					>
 						Tạo tài khoản
 					</Button>

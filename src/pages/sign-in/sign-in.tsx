@@ -12,6 +12,7 @@ import ROUTE_PATH from "../../configs/routes.config";
 import useAxios from "../../hooks/useAxios";
 import { TSignIn, TSignInResponse } from "../../types/auth";
 import { IAPIResponse, TBaseVariants } from "../../types/general";
+import { validateEmail } from "../../utils/validations";
 
 // interface SignInProps {}
 
@@ -56,6 +57,19 @@ const SignIn = () => {
 			setCurrentSignInMethod("email");
 			setSignInForm((prev) => ({ ...prev, username: null }));
 		}
+	};
+
+	const validSignInForm = () => {
+		if (currentSignInMethod === "email") {
+			if (!signInForm.email || !signInForm.password) {
+				return false;
+			}
+		} else {
+			if (!signInForm.username || !signInForm.password) {
+				return false;
+			}
+		}
+		return true;
 	};
 
 	return (
@@ -126,6 +140,8 @@ const SignIn = () => {
 						name={"email"}
 						value={signInForm.email || ""}
 						onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
+						validator={validateEmail}
+						errorMessage={"Email không hợp lệ"}
 					/>
 				) : (
 					<Input
@@ -158,6 +174,7 @@ const SignIn = () => {
 						size={"md"}
 						color={"primary"}
 						onClick={handleSignIn}
+						isDisabled={!validSignInForm()}
 					>
 						Đăng nhập ngay
 					</Button>
