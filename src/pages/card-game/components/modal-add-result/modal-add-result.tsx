@@ -1,18 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { IoMdAdd } from "react-icons/io";
-import { useParams } from "react-router";
-import Button from "../../../../components/button";
-import Typography from "../../../../components/typography";
-import useSocket from "../../../../hooks/useSocket";
-import { TMatchHistory, TPostPlayerResult, TRoomInfo, TTwoPlayResult } from "../../../../types/cardgame";
-import PlayerResultRow from "../player-result-row";
-import ModalWrapper from "../../../../components/modal-wrapper";
-import ICON_CONFIG from "../../../../configs/icon.config";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
-import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
+import { useParams } from "react-router";
+import Button from "../../../../components/button";
+import ModalWrapper from "../../../../components/modal-wrapper";
 import Select from "../../../../components/select";
+import Typography from "../../../../components/typography";
+import ICON_CONFIG from "../../../../configs/icon.config";
+import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
+import useSocket from "../../../../hooks/useSocket";
+import { TMatchHistory, TPostPlayerResult, TRoomInfo, TTwoPlayResult } from "../../../../types/cardgame";
 import { BASE_RESULT, RESULT_DRAG_ITEMS, SPECIAL_RESULT } from "../drag-items";
+import PlayerResultRow from "../player-result-row";
 
 interface ModalAddResultProps {
 	isShowModal: boolean;
