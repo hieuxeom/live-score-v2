@@ -113,11 +113,14 @@ export default {
     extend: {
       boxShadow: {
         "primary": {
-          1: "0px 8px 0px 0px #E2474B"
+          1: "0px 8px 0px 0px #E2474B",
+          2: "0px 0px 0px 0px #E2474B",
+          3: "0px 12px 0px 0px #E2474B",
         },
         "secondary": {
           1: "0px 8px 0px 0px #2F3A56",
-          2: "0px 8px 0px 0px #406D96"
+          2: "0px 8px 0px 0px #406D96",
+          3: "0px 0px 0px 0px #2F3A56",
         },
 
       },

@@ -20,7 +20,7 @@
 
 .scrollable-content {
 	overflow-y: auto;
-	overflow-x: hidden;
+	overflow-x: auto;
 }
 
 .scrollable-content::-webkit-scrollbar {

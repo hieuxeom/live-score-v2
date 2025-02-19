@@ -7,7 +7,7 @@ import Typography from "../../../components/typography";
 import Input from "../../../components/input";
 import Button from "../../../components/button";
 import { useCookies } from "react-cookie";
-import { TSocketRoomCreated } from "../../../types/cardgame";
+import { TGameCardSocketRoomCreated } from "../../../types/game-card";
 import toast from "react-hot-toast";
 import SOCKET_EVENT_NAMES from "../../../configs/socket-event-names.config";
 
@@ -42,7 +42,7 @@ const NewRoom = () => {
 	};
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TGameCardSocketRoomCreated) => {
 			toast.success("Tạo phòng thành công");
 			return navigate(ROUTE_PATH.CARD_GAME.GAME_ROOM(response.newRoomId));
 		});
@@ -67,7 +67,7 @@ const NewRoom = () => {
 				<div className={"w-full bg-white px-8 py-4 shadow-secondary-1 rounded-2xl flex flex-col gap-4"}>
 					<Typography
 						type={"h2"}
-						className={"text-center text-secondary-base"}
+						className={"text-center text-secondary"}
 					>
 						Tùy chỉnh tên
 					</Typography>
@@ -121,7 +121,7 @@ const NewRoom = () => {
 				>
 					<Typography
 						type={"h2"}
-						className={"text-center text-secondary-base"}
+						className={"text-center text-secondary"}
 					>
 						Cấu hình điểm
 					</Typography>

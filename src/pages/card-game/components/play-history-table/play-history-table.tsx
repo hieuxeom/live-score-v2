@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { THistoryScoreBoard, TMatchHistory, TRoomInfo, TPlayHistory, TTwoPlayResult } from "../../../../types/cardgame";
+import {
+	TGameCardHistoryScoreBoard,
+	TGameCardMatchHistory,
+	TRoomInfo,
+	TGameCardPlayHistory,
+	TGameCardTwoPlayResult,
+} from "../../../../types/game-card";
 import FirstPlaceMedal from "../../../../components/icon-svg/first-place-medal";
 import BurnBlackTwo from "../../../../components/icon-svg/burn-black-two";
 import BurnOut from "../../../../components/icon-svg/burn-out";
@@ -23,11 +29,12 @@ import ICON_CONFIG from "../../../../configs/icon.config";
 import { useParams } from "react-router";
 import useSocket from "../../../../hooks/useSocket";
 import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
+import clsx from "clsx";
 
 interface PlayHistoryTableProps {
 	roomInfo: TRoomInfo;
-	playHistory: TPlayHistory;
-	historyScoreBoard: THistoryScoreBoard;
+	playHistory: TGameCardPlayHistory;
+	historyScoreBoard: TGameCardHistoryScoreBoard;
 }
 
 const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHistoryTableProps) => {
@@ -41,14 +48,14 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 
 	const { matchResults, twoPlayResults } = playHistory;
 
-	const getMatchData = (playerId: number, matchIndex: number): TMatchHistory | null => {
+	const getMatchData = (playerId: number, matchIndex: number): TGameCardMatchHistory | null => {
 		const matchData = matchResults.find((data) => data.player_index === playerId && data.match_id === matchIndex);
 		if (!matchData) return null;
 
 		return matchData;
 	};
 
-	const getTwoPlayResult = (playerId: number, matchIndex: number): TTwoPlayResult[] | [] => {
+	const getTwoPlayResult = (playerId: number, matchIndex: number): TGameCardTwoPlayResult[] | [] => {
 		const twoPlayResult = twoPlayResults.filter(
 			(data) => (data.burner === playerId || data.taker === playerId) && data.match_id === matchIndex
 		);
@@ -57,7 +64,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 		return twoPlayResult;
 	};
 
-	const MapResultIcon = (matchData: TMatchHistory | null, twoPlayResult: TTwoPlayResult[]) => {
+	const MapResultIcon = (matchData: TGameCardMatchHistory | null, twoPlayResult: TGameCardTwoPlayResult[]) => {
 		const result = [];
 
 		if (matchData === null) {
@@ -119,39 +126,21 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 
 	return (
 		<div
-			className={
-				"bg-white p-8 shadow-primary-1 rounded-2xl col-span-2 w-full flex flex-col gap-4 h-full max-h-[70vh]"
-			}
+			className={clsx(
+				"bg-white shadow-primary-1 rounded-2xl col-span-2 w-full flex flex-col gap-4 h-full",
+				"xl:max-h-[70vh]",
+				"lg:max-h-[50vh] lg:p-8",
+				"max-h-[70vh] p-4"
+			)}
 		>
-			<div className={"flex items-end justify-between"}>
+			<div className={clsx("flex flex-col gap-2", "lg:justify-between lg:flex-row lg:items-end ")}>
 				<Typography
 					type={"h3"}
 					className={"text-secondary inline-block"}
 				>
-					Lịch sử chơi
+					Lịch sử chơi - <span className={"text-primary"}>{matchResults.length / 4 || 0}</span> ván
 				</Typography>
 				<div className={"flex items-center gap-4"}>
-					<div className={"flex items-center gap-1 italic"}>
-						<Typography
-							type="h5"
-							className={"text-secondary"}
-						>
-							Đã chơi
-						</Typography>
-
-						<Typography
-							type="h5"
-							className={"text-primary"}
-						>
-							{matchResults.length / 4 || 0}
-						</Typography>
-						<Typography
-							type="h5"
-							className={"text-secondary"}
-						>
-							ván
-						</Typography>
-					</div>
 					<div className={"flex items-center gap-2"}>
 						<Radio
 							textValue={"Biểu tượng"}

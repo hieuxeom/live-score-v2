@@ -6,6 +6,10 @@ import NewRoom from "../../pages/card-game/new-room";
 import GameRoom from "../../pages/card-game/game-room";
 import SignUp from "../../pages/sign-up";
 import SignIn from "../../pages/sign-in";
+import Badminton from "../../pages/badminton";
+import BadmintonGameRoom from "../../pages/badminton/badminton-game-room";
+import BadmintonNewRoom from "../../pages/badminton/badminton-new-room";
+import Redirect from "../redirect";
 
 interface IndexRouterProps {}
 
@@ -42,20 +46,21 @@ const IndexRouter = ({}: IndexRouterProps) => (
 						element={<GameRoom />}
 					/>
 				</Route>
-				{/* <Route path={"/card-game"}>
+				<Route path={"/badminton"}>
 					<Route
 						index
-						element={<CardGameIndex />}
+						element={<Badminton />}
 					/>
 					<Route
 						path={"new"}
-						element={<NewGame />}
+						element={<BadmintonNewRoom />}
 					/>
 					<Route
 						path={":roomId"}
-						element={<GameRoom />}
+						element={<BadmintonGameRoom />}
 					/>
 				</Route>
+				{/*
 				<Route path={"/football"}>
 					<Route
 						index
@@ -68,6 +73,11 @@ const IndexRouter = ({}: IndexRouterProps) => (
 						element={<BadmintonIndex />}
 					></Route>
 				</Route> */}
+
+				<Route
+					path={"*"}
+					element={<Redirect to={"/"} />}
+				/>
 			</Route>
 		</Routes>
 	</BrowserRouter>

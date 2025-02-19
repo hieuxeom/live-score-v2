@@ -1,5 +1,6 @@
 const API_ENDPOINTS = {
 	GAME_CARD: `game-card`,
+	BADMINTON: `badminton`,
 	ACCOUNT: `accounts`,
 };
 
@@ -14,9 +15,14 @@ const API_ROUTES = {
 		GET_ROOM_RESULTS: (roomId: string | number) => `${API_ENDPOINTS.GAME_CARD}/${roomId}/results`,
 		CLOSE_ROOM: (roomId: string | number) => `${API_ENDPOINTS.GAME_CARD}/${roomId}/close-room`,
 	},
+	BADMINTON: {
+		GET_MATCH_INFO: (matchId: string | number) => `/${API_ENDPOINTS.BADMINTON}/${matchId}`,
+		CREATE_MATCH: `/${API_ENDPOINTS.BADMINTON}`,
+	},
 	ACCOUNT: {
 		SIGN_UP: `/${API_ENDPOINTS.ACCOUNT}/sign-up`,
 		SIGN_IN: `/${API_ENDPOINTS.ACCOUNT}/sign-in`,
+		EMAIL_CHECK: `/${API_ENDPOINTS.ACCOUNT}/check`,
 	},
 };
 

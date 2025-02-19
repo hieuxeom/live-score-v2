@@ -4,6 +4,7 @@ interface PlayerResultRowProps {
 	playerName: string;
 	onDrop: (e: React.DragEvent) => void;
 	onDragOver: (e: React.DragEvent) => void;
+	onClick: () => void;
 	playerIndex: number;
 	value: string[];
 	onRemoveValue: (e: string) => void;
@@ -13,6 +14,7 @@ const PlayerResultRow = ({
 	playerName,
 	onDrop,
 	onDragOver,
+	onClick,
 	playerIndex,
 	value,
 	onRemoveValue,
@@ -26,6 +28,7 @@ const PlayerResultRow = ({
 				className={"w-full flex flex-wrap items-center gap-2 p-1 rounded-xl border-2 border-secondary"}
 				onDrop={onDrop}
 				onDragOver={onDragOver}
+				onClick={onClick}
 				data-player-index={playerIndex.toString()}
 			>
 				{value.length < 1 ? (
@@ -44,8 +47,11 @@ const PlayerResultRow = ({
 					value.map((item) => (
 						<div
 							key={`player-${playerIndex}-result-${item}`}
-							className={"px-4 py-1 bg-primary w-max text-light rounded-lg cursor-grab"}
-							onClick={() => onRemoveValue(item)}
+							className={"z-10 px-4 py-1 bg-primary w-max text-light rounded-lg cursor-grab"}
+							onClick={(e) => {
+								e.stopPropagation();
+								onRemoveValue(item);
+							}}
 						>
 							<Typography type={"small"}>
 								{RESULT_DRAG_ITEMS.find((i) => i.key === item)?.value}

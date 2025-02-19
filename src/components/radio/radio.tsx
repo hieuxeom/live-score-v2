@@ -48,7 +48,7 @@ const Radio = ({
 	};
 
 	return (
-		<div className="inline-flex items-center cursor-pointer">
+		<div className="inline-flex items-center cursor-pointer min-w-max">
 			<label
 				className="relative flex cursor-pointer items-center rounded-full p-2"
 				htmlFor={name + value}

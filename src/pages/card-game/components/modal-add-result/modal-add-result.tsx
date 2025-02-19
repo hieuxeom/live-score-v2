@@ -9,19 +9,29 @@ import Typography from "../../../../components/typography";
 import ICON_CONFIG from "../../../../configs/icon.config";
 import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
 import useSocket from "../../../../hooks/useSocket";
-import { TMatchHistory, TPostPlayerResult, TRoomInfo, TTwoPlayResult } from "../../../../types/cardgame";
+import {
+	TGameCardMatchHistory,
+	TGameCardNewPlayerResult,
+	TRoomInfo,
+	TGameCardTwoPlayResult,
+} from "../../../../types/game-card";
 import { BASE_RESULT, RESULT_DRAG_ITEMS, SPECIAL_RESULT } from "../drag-items";
 import PlayerResultRow from "../player-result-row";
+import clsx from "clsx";
+import Divider from "../../../../components/divider";
+import useScreenSize from "../../../../hooks/useScreenSize";
+import { BREAK_POINT } from "../../../../configs/break-points.config";
 
 interface ModalAddResultProps {
 	isShowModal: boolean;
 	setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-	matchHistory: TMatchHistory[];
+	matchHistory: TGameCardMatchHistory[];
 	roomInfo: TRoomInfo;
 }
 
 const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResultProps) => {
 	const { roomId } = useParams();
+	const { width } = useScreenSize();
 
 	const [cookies] = useCookies(["username"]);
 
@@ -34,9 +44,11 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 	const [player3DragValue, setPlayer3DragValue] = useState<string[]>([]);
 	const [player4DragValue, setPlayer4DragValue] = useState<string[]>([]);
 
-	const [twoPlayResults, setTwoPlayResults] = useState<Omit<TTwoPlayResult, "result_id" | "match_id">[]>([]);
+	const [twoPlayResults, setTwoPlayResults] = useState<Omit<TGameCardTwoPlayResult, "result_id" | "match_id">[]>([]);
 
 	const [availableDragResults, setAvailableDragResults] = useState([...RESULT_DRAG_ITEMS]);
+
+	const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
 	const getPlayerName = (playerIndex: number) => {
 		switch (playerIndex) {
@@ -72,8 +84,16 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 		},
 	];
 
-	const handleMapPlayerResult = (resultData: string[]): TPostPlayerResult => {
-		const resultObj: TPostPlayerResult = {
+	const handleSelectResult = (resultKey: string) => {
+		if (selectedValue === resultKey) {
+			setSelectedValue(null);
+		} else {
+			setSelectedValue(resultKey);
+		}
+	};
+
+	const handleMapPlayerResult = (resultData: string[]): TGameCardNewPlayerResult => {
+		const resultObj: TGameCardNewPlayerResult = {
 			rank: resultData.includes("noResult")
 				? 0
 				: resultData.includes("firstPlace") || resultData.includes("winAll")
@@ -115,6 +135,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 		setPlayer3DragValue([]);
 		setPlayer4DragValue([]);
 		setTwoPlayResults([]);
+		setSelectedValue(null);
 		setAvailableDragResults([...RESULT_DRAG_ITEMS]);
 
 		document.querySelectorAll("input[type=checkbox]").forEach((el) => {
@@ -182,32 +203,33 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 
 		const playerIndex = e.currentTarget.getAttribute("data-player-index");
 
+		if (!playerIndex) return;
+
+		handleSetPlayerResult(playerResult, playerIndex);
+	};
+
+	const handleOnClickPlayerResult = (playerIndex: string) => {
+		if (!selectedValue) return;
+
+		handleSetPlayerResult(selectedValue, playerIndex);
+	};
+
+	const handleSetPlayerResult = (playerResult: string, playerIndex: string) => {
+		setSelectedValue(null);
 		if (SPECIAL_RESULT.some((_v) => _v.key === playerResult)) {
+			console.log("special result");
+
 			if (playerResult === "winAll") {
 				return handleWinAllResult(Number(playerIndex));
 			}
 		}
 
 		if (BASE_RESULT.some((_v) => _v.key === playerResult)) {
-			handleNormalResult(Number(playerIndex), playerResult);
+			console.log("normal result");
+
+			return handleNormalResult(Number(playerIndex), playerResult);
 		}
 	};
-
-	useEffect(() => {
-		const currentSelectedResults = [player1DragValue, player2DragValue, player3DragValue, player4DragValue].flat();
-
-		if (currentSelectedResults.length === 0) {
-			setAvailableDragResults(RESULT_DRAG_ITEMS);
-		} else {
-			if (currentSelectedResults.includes("winAll")) {
-				setAvailableDragResults([]);
-			} else {
-				setAvailableDragResults(
-					BASE_RESULT.filter((_v) => !currentSelectedResults.includes(_v.key) || _v.key === "burntOut")
-				);
-			}
-		}
-	}, [player1DragValue, player2DragValue, player3DragValue, player4DragValue]);
 
 	const handleRemovePlayerResult = (playerIndex: number, playerResult: string) => {
 		if (playerResult === "winAll") {
@@ -329,6 +351,22 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 	}, [isShowModal]);
 
 	useEffect(() => {
+		const currentSelectedResults = [player1DragValue, player2DragValue, player3DragValue, player4DragValue].flat();
+
+		if (currentSelectedResults.length === 0) {
+			setAvailableDragResults(RESULT_DRAG_ITEMS);
+		} else {
+			if (currentSelectedResults.includes("winAll")) {
+				setAvailableDragResults([]);
+			} else {
+				setAvailableDragResults(
+					BASE_RESULT.filter((_v) => !currentSelectedResults.includes(_v.key) || _v.key === "burntOut")
+				);
+			}
+		}
+	}, [player1DragValue, player2DragValue, player3DragValue, player4DragValue]);
+
+	useEffect(() => {
 		socket.on(SOCKET_EVENT_NAMES.CREATE_RESULT.RECEIVE, () => {
 			toast.success("Lưu kết quả trận đấu thành công!", { id: createStatusToast.current });
 		});
@@ -339,17 +377,21 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 			title={"Kết quả trận đấu"}
 			isShowModal={isShowModal}
 			setIsShowModal={setIsShowModal}
+			width={width < BREAK_POINT.LG ? "full" : "7xl"}
 			classNames={{
-				modal: "-top-16",
+				modal: "-top-16 px-2",
 			}}
 		>
-			<main className={"w-full flex flex-col gap-4 py-4"}>
-				<div className={"w-full flex items-start gap-4"}>
-					<div className="w-2/3 flex flex-col gap-4 pr-4 border-r border-r-muted">
+			<main className={clsx("w-full flex flex-col gap-4 py-4")}>
+				<div className={clsx("w-full flex items-start gap-4", "lg:flex-row", "flex-col")}>
+					<div
+						className={clsx("w-full flex flex-col gap-4", "lg:w-2/3 lg:pr-4 lg:border-r lg:border-r-muted")}
+					>
 						<PlayerResultRow
 							playerName={roomInfo.player1_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
+							onClick={() => handleOnClickPlayerResult("1")}
 							playerIndex={1}
 							value={player1DragValue}
 							onRemoveValue={(item: string) => handleRemovePlayerResult(1, item)}
@@ -358,6 +400,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 							playerName={roomInfo.player2_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
+							onClick={() => handleOnClickPlayerResult("2")}
 							playerIndex={2}
 							value={player2DragValue}
 							onRemoveValue={(item: string) => handleRemovePlayerResult(2, item)}
@@ -366,6 +409,7 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 							playerName={roomInfo.player3_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
+							onClick={() => handleOnClickPlayerResult("3")}
 							playerIndex={3}
 							value={player3DragValue}
 							onRemoveValue={(item: string) => handleRemovePlayerResult(3, item)}
@@ -374,18 +418,24 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 							playerName={roomInfo.player4_name}
 							onDrop={handleOnDropMatchResult}
 							onDragOver={handleOnDragOver}
+							onClick={() => handleOnClickPlayerResult("4")}
 							playerIndex={4}
 							value={player4DragValue}
 							onRemoveValue={(item: string) => handleRemovePlayerResult(4, item)}
 						/>
 					</div>
-					<div className={"w-1/3 flex flex-wrap gap-4 items-center"}>
+					<div className={clsx("w-full flex flex-wrap gap-4 items-center", "lg:w-1/3")}>
 						{availableDragResults.map((item) => (
 							<div
 								key={item.key}
-								className={"px-8 py-2 bg-primary text-light rounded-xl cursor-grab"}
+								className={clsx("px-8 py-2 text-light rounded-xl cursor-grab", {
+									"bg-danger": selectedValue === item.key,
+									"bg-primary/50": selectedValue !== item.key && selectedValue,
+									"bg-primary": !selectedValue,
+								})}
 								draggable={true}
 								onDragStart={(e) => handleOnDragMatchResult(e, item.key)}
+								onClick={() => handleSelectResult(item.key)}
 							>
 								<Typography type={"large"}>{item.value}</Typography>
 							</div>
@@ -393,10 +443,10 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 					</div>
 				</div>
 				<div className={"w-full"}>
-					<hr />
+					<Divider className={"!my-2"} />
 				</div>
-				<div className={"flex flex-col gap-4"}>
-					<div className={"flex items-center gap-2"}>
+				<div className={clsx("flex flex-col gap-4")}>
+					<div className={clsx("flex", "lg:flex-row lg:items-center lg:gap-2", "flex-col items-start gap-4")}>
 						<Typography type={"h2"}>Kết quả chặt heo</Typography>
 						<Button
 							size={"md"}
@@ -409,59 +459,67 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 							Thêm kết quả
 						</Button>
 					</div>
-					<div className={"w-full flex items-start gap-4"}>
-						<div className={"w-full flex flex-col gap-4"}>
+					<div className={clsx("w-full flex items-start gap-4")}>
+						<div className={clsx("w-full flex flex-col gap-4")}>
 							{twoPlayResults.map((item, index) => (
-								<div
-									className={"flex items-center gap-4"}
-									key={index}
-								>
-									<Select
-										name={`burner-${index}`}
-										placeholder={"Chọn người thua"}
-										items={listItems}
-										value={item.burner}
-										className={"min-w-32"}
-										onChange={(e) => handleSelectBurner(index, Number(e.target.value))}
-									/>
-									<Typography type={"h5"}>Bị chặt/cháy</Typography>
-									<Button
-										size={"sm"}
-										className={"min-w-24 px-4"}
-										color={"secondary"}
-										onClick={() => handleChangeQuantity(index, item.quantity === 1 ? 2 : 1)}
+								<>
+									{<Divider className={"!my-1 lg:hidden"} />}
+									<div
+										className={clsx("flex items-center flex-wrap gap-4")}
+										key={index}
 									>
-										{item.quantity} con
-									</Button>
-									<Button
-										size={"sm"}
-										className={"min-w-24 px-4"}
-										color={item.two_color === "red" ? "danger" : "default"}
-										onClick={() =>
-											handleChangeColor(index, item.two_color === "red" ? "black" : "red")
-										}
-									>
-										heo {item.two_color === "red" ? "đỏ" : "đen"}
-									</Button>
-									<Typography type={"h5"}>bởi</Typography>
-									<Select
-										name={`taker-${index}`}
-										placeholder={"Chọn người ăn"}
-										items={listItems}
-										value={item.taker}
-										className={"min-w-32"}
-										onChange={(e) => handleSelectTaker(index, Number(e.target.value))}
-									/>
-									<Button
-										color={"danger"}
-										variant={"light"}
-										isIconOnly={true}
-										size={"lg"}
-										className={"group"}
-										onClick={() => handleRemoveTwoPlayResultRow(index)}
-										startIcon={ICON_CONFIG.CLOSE}
-									></Button>
-								</div>
+										<Select
+											name={`burner-${index}`}
+											placeholder={"Chọn người thua"}
+											items={listItems}
+											value={item.burner}
+											className={"min-w-32"}
+											onChange={(e) => handleSelectBurner(index, Number(e.target.value))}
+										/>
+										<Typography
+											type={"h5"}
+											className={"min-w-max"}
+										>
+											Bị chặt/cháy
+										</Typography>
+										<Button
+											size={"sm"}
+											className={"min-w-24 px-4"}
+											color={"secondary"}
+											onClick={() => handleChangeQuantity(index, item.quantity === 1 ? 2 : 1)}
+										>
+											{item.quantity} con
+										</Button>
+										<Button
+											size={"sm"}
+											className={"min-w-24 px-4"}
+											color={item.two_color === "red" ? "danger" : "default"}
+											onClick={() =>
+												handleChangeColor(index, item.two_color === "red" ? "black" : "red")
+											}
+										>
+											heo {item.two_color === "red" ? "đỏ" : "đen"}
+										</Button>
+										<Typography type={"h5"}>bởi</Typography>
+										<Select
+											name={`taker-${index}`}
+											placeholder={"Chọn người ăn"}
+											items={listItems}
+											value={item.taker}
+											className={"min-w-32"}
+											onChange={(e) => handleSelectTaker(index, Number(e.target.value))}
+										/>
+										<Button
+											color={"danger"}
+											variant={"light"}
+											isIconOnly={true}
+											size={"lg"}
+											className={"group"}
+											onClick={() => handleRemoveTwoPlayResultRow(index)}
+											startIcon={ICON_CONFIG.CLOSE}
+										></Button>
+									</div>
+								</>
 							))}
 						</div>
 					</div>

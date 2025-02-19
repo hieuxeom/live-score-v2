@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import Typography from "../../typography";
 import toast from "react-hot-toast";
 import ROUTE_PATH from "../../../configs/routes.config";
+import { sliceText } from "../../../utils/slice-text";
 
 // interface ClientLayoutProps {}
 
@@ -21,7 +22,7 @@ const ClientLayout = () => {
 	};
 
 	return (
-		<div className={"relative w-screen min-h-screen h-full flex flex-col items-center"}>
+		<div className={"relative w-full min-h-screen h-full flex flex-col items-center"}>
 			<nav
 				className={
 					"absolute top-0 left-0 w-full flex justify-center items-center bg-white rounded-bl-xl rounded-br-xl p-2"
@@ -41,7 +42,7 @@ const ClientLayout = () => {
 					<div className={"flex items-center gap-4"}>
 						{cookies.refresh_token ? (
 							<>
-								<Typography type={"small"}>{cookies.username ?? "-"}</Typography>
+								<Typography type={"small"}>{sliceText(cookies.username, 8) ?? "-"}</Typography>
 								<Button
 									color={"danger"}
 									size={"sm"}
@@ -64,7 +65,7 @@ const ClientLayout = () => {
 					</div>
 				</div>
 			</nav>
-			<div className={"bg-primary-gradient w-full"}>
+			<div className={"bg-primary-gradient w-full min-h-screen h-full"}>
 				<Outlet />
 			</div>
 			<div className={"absolute bottom-0 my-4"}>

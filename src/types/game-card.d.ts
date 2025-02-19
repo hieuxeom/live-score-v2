@@ -1,4 +1,4 @@
-export type TRoom = {
+export type TGameCardRoom = {
 	room_id: number;
 	created_by: number;
 	email: string;
@@ -8,7 +8,7 @@ export type TRoom = {
 	is_deleted: number;
 };
 
-export type TRoomConfig = {
+export type TGameCardRoomConfig = {
 	first: number;
 	second: number;
 	third: number;
@@ -23,13 +23,9 @@ export type TRoomConfig = {
 	player4_name: string;
 };
 
-export type TRoomInfo = TRoom & TRoomConfig & { username: string };
+export type TRoomInfo = TGameCardRoom & TGameCardRoomConfig & { username: string };
 
-export type TRoomConfig = Omit<TRoomInfo, "room_id" | "created_at" | "updated_at" | "is_closed" | "is_deleted">;
-
-export type NewRoomDetails = {};
-
-export type TMatchHistory = {
+export type TGameCardMatchHistory = {
 	room_id: number;
 	match_id: number;
 	created_at: string;
@@ -41,7 +37,7 @@ export type TMatchHistory = {
 	swept_out: boolean;
 };
 
-export type TPlayerResult = {
+export type TGameCardPlayerResult = {
 	player_index: number;
 	rank: number;
 	win_all: number;
@@ -49,18 +45,18 @@ export type TPlayerResult = {
 	swept_out: number;
 };
 
-export type TPostPlayerResult = Omit<TPlayerResult, "player_index">;
+export type TGameCardNewPlayerResult = Omit<TGameCardPlayerResult, "player_index">;
 
-export type TNewMatchPostBody = {
+export type TGameCardNewResult = {
 	matchId: number;
-	player1Result: TPostPlayerResult | null;
-	player2Result: TPostPlayerResult | null;
-	player3Result: TPostPlayerResult | null;
-	player4Result: TPostPlayerResult | null;
-	twoPlayResults: Omit<TTwoPlayResult, "result_id" | "match_id">[];
+	player1Result: TGameCardNewPlayerResult | null;
+	player2Result: TGameCardNewPlayerResult | null;
+	player3Result: TGameCardNewPlayerResult | null;
+	player4Result: TGameCardNewPlayerResult | null;
+	twoPlayResults: Omit<TGameCardTwoPlayResult, "result_id" | "match_id">[];
 };
 
-export type TScoreBoard = {
+export type TGameCardScoreBoard = {
 	totalScore: {
 		player1: number;
 		player2: number;
@@ -75,15 +71,15 @@ export type TScoreBoard = {
 	];
 };
 
-export type THistoryScoreBoard = number[][];
+export type TGameCardHistoryScoreBoard = number[][];
 
-export type TRoomResults = {
-	scoreBoard: TScoreBoard;
-	historyScoreBoard: THistoryScoreBoard;
-	playHistory: TPlayHistory;
+export type TGameCardRoomResults = {
+	scoreBoard: TGameCardScoreBoard;
+	historyScoreBoard: TGameCardHistoryScoreBoard;
+	playHistory: TGameCardPlayHistory;
 };
 
-export type TTwoPlayResult = {
+export type TGameCardTwoPlayResult = {
 	result_id: number;
 	match_id: number;
 	two_color: "red" | "black";
@@ -92,39 +88,39 @@ export type TTwoPlayResult = {
 	quantity: number;
 };
 
-export type TPlayHistory = {
+export type TGameCardPlayHistory = {
 	matchResults: IMatchHistory[];
-	twoPlayResults: TTwoPlayResult[];
+	twoPlayResults: TGameCardTwoPlayResult[];
 };
 
-export type TSocketPlayerChange = {
+export type TGameCardSocketPlayerChange = {
 	newJoin: string;
 	newLeave: string;
 	currentInRoom: number;
 	playersInRoom: string[];
 };
 
-export type TSocketRoomCreated = {
+export type TGameCardSocketRoomCreated = {
 	listRooms: TRoomInfo[];
 	newRoomId: string;
 };
 
-export type TSocketNewResult = {
+export type TGameCardSocketNewResult = {
 	createdBy: string;
-	roomResults: TRoomResults;
+	roomResults: TGameCardRoomResults;
 };
 
-export type TSocketDeleteResult = {
+export type TGameCardSocketDeleteResult = {
 	deleteBy: string;
-	roomResults: TRoomResults;
+	roomResults: TGameCardRoomResults;
 };
 
-export type TSocketUpdatedRoomConfig = {
+export type TGameCardSocketUpdatedRoomConfig = {
 	updatedBy: string;
 	roomDetails: TRoomInfo;
 };
 
-export type TSocketCloseRoom = {
+export type TGameCardSocketCloseRoom = {
 	closedBy: string;
 	roomDetails: TRoomInfo;
 	listRooms: TRoomInfo[];

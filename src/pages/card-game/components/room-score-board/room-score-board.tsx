@@ -5,11 +5,12 @@ import TableHeader from "../../../../components/table/table-header";
 import TableRow from "../../../../components/table/table-row";
 import TableWrapper from "../../../../components/table/table-wrapper";
 import Typography from "../../../../components/typography";
-import { TScoreBoard } from "../../../../types/cardgame";
+import { TGameCardScoreBoard } from "../../../../types/game-card";
 import Radio from "../../../../components/radio";
+import clsx from "clsx";
 
 interface RoomScoreBoardProps {
-	scoreBoard: TScoreBoard;
+	scoreBoard: TGameCardScoreBoard;
 }
 
 const RoomScoreBoard = ({ scoreBoard }: RoomScoreBoardProps) => {
@@ -19,10 +20,10 @@ const RoomScoreBoard = ({ scoreBoard }: RoomScoreBoardProps) => {
 
 	return (
 		<>
-			<div className={"flex items-end justify-between"}>
+			<div className={clsx("flex flex-col justify-between gap-2", "2xl:flex-row")}>
 				<Typography
 					type={"h3"}
-					className={"text-secondary inline-block"}
+					className={"min-w-max text-secondary inline-block"}
 				>
 					Bảng điểm
 				</Typography>

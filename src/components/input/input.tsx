@@ -7,16 +7,24 @@ interface InputProps {
 	type?: "text" | "number" | "email" | "password";
 	id?: string;
 	name: string;
-	label: string;
+	label?: string;
 	labelPlacement?: "top" | "left";
 	placeholder?: string;
-	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+	onFocus?: () => void;
+	onBlur?: () => void;
 	value: string;
 	validator?: (value: string) => boolean;
 	errorMessage?: string;
 	startContent?: React.ReactNode;
 	endContent?: React.ReactNode;
 	isDisabled?: boolean;
+	isError?: boolean;
+	classNames?: {
+		wrapper?: string;
+		label?: string;
+		input?: string;
+	};
 }
 
 const Input = ({
@@ -27,12 +35,16 @@ const Input = ({
 	labelPlacement = "top",
 	placeholder,
 	onChange,
+	onFocus,
+	onBlur,
 	value,
 	validator,
 	errorMessage,
 	startContent,
 	endContent,
 	isDisabled = false,
+	isError = false,
+	classNames,
 }: InputProps) => {
 	const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -42,33 +54,30 @@ const Input = ({
 	};
 
 	const handleValidator = () => {
-		if (value === "") {
-			return true;
-		}
-		if (validator) {
-			return validator(value);
-		}
-		return true;
+		if (value === "") return true;
+		return validator ? validator(value) : true;
 	};
 
 	return (
-		<div className={clsx("w-full", MapWrapperClasses[labelPlacement])}>
-			<label
-				htmlFor={id}
-				className={clsx("min-w-max", {
-					"!text-danger": validator && !handleValidator(),
-				})}
-			>
-				<Typography type={"p"}>{label}</Typography>
-			</label>
+		<div className={clsx("w-full", classNames?.wrapper, MapWrapperClasses[labelPlacement])}>
+			{label && (
+				<label
+					htmlFor={id}
+					className={clsx("min-w-max", classNames?.label, {
+						"!text-danger": (validator && !handleValidator()) || isError,
+					})}
+				>
+					<Typography type={"p"}>{label}</Typography>
+				</label>
+			)}
 			<div className={"w-full flex items-center group"}>
 				{startContent && (
 					<div
 						className={clsx(
 							"h-full px-4 py-2 border transition-colors duration-300",
-							"border-secondary/50 rounded-s-xl border-b-4 group-hover:border-secondary ",
+							"border-secondary/50 rounded-s-xl border-b-4 group-hover:border-secondary",
 							{
-								"!border-danger": validator && !handleValidator(),
+								"!border-danger": (validator && !handleValidator()) || isError,
 								"!border-secondary": isFocus && handleValidator() && value.length === 0,
 								"bg-secondary-400 text-light": isDisabled,
 							}
@@ -82,22 +91,33 @@ const Input = ({
 					name={name}
 					value={value}
 					type={type}
-					onChange={onChange}
-					onFocus={() => setIsFocus(true)}
-					onBlur={() => setIsFocus(false)}
+					onChange={(e) => onChange && onChange(e)}
+					onFocus={() => {
+						setIsFocus(true);
+						onFocus && onFocus();
+					}}
+					onBlur={() => {
+						setIsFocus(false);
+						onBlur && onBlur();
+					}}
 					placeholder={placeholder}
+					disabled={isDisabled}
+					inputMode={type === "number" ? "numeric" : undefined}
+					pattern={type === "number" ? "[0-9]*" : undefined}
 					className={clsx(
 						"w-full px-4 py-2 border border-secondary/50 rounded-xl border-b-4 outline-none transition-colors duration-300",
 						"focus:border-secondary hover:border-secondary",
+						classNames?.input,
 						{
-							"!border-danger text-danger": validator && !handleValidator(),
-							"!border-secondary": value.length !== 0 && handleValidator(),
+							"!border-danger text-danger": (validator && !handleValidator()) || isError,
+							"!border-secondary": value.length !== 0 && handleValidator() && !isError,
 							"!rounded-s-none !border-l-0": startContent,
 							"!rounded-e-none !border-r-0": endContent,
 							"bg-secondary-400 text-light": isDisabled,
-						}
+						},
+						type === "number" &&
+							"appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
 					)}
-					disabled={isDisabled}
 				/>
 				{endContent && (
 					<div
@@ -106,7 +126,7 @@ const Input = ({
 							"border-l-0 border-secondary/50 rounded-e-xl border-b-4 group-hover:border-secondary",
 							{
 								"!border-secondary": isFocus || value.length > 0,
-								"!border-danger": validator && !handleValidator(),
+								"!border-danger": (validator && !handleValidator()) || isError,
 								"bg-secondary-400 text-light": isDisabled,
 							}
 						)}
@@ -115,10 +135,14 @@ const Input = ({
 					</div>
 				)}
 			</div>
-			{validator && !handleValidator() && value !== "" && errorMessage && (
+
+			{errorMessage !== undefined && (
 				<Typography
 					type={"tiny"}
-					className={clsx("text-danger italic mt-2 visible")}
+					className={clsx("text-danger italic mt-2", {
+						invisible: !isError && (!validator || handleValidator()),
+						visible: isError || (validator && !handleValidator()),
+					})}
 				>
 					{errorMessage}
 				</Typography>

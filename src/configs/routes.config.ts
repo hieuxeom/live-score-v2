@@ -1,6 +1,10 @@
 const ROUTE_PATH = {
 	HOME: "/",
-	BADMINTON: {},
+	BADMINTON: {
+		INDEX: "/badminton",
+		ROOM: (roomId: string | number) => `/badminton/${roomId}`,
+		CREATE_NEW_ROOM: "/badminton/new",
+	},
 	CARD_GAME: {
 		INDEX: "/card-game",
 		GAME_ROOM: (roomId: string | number) => `/card-game/${roomId}`,

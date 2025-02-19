@@ -16,8 +16,18 @@ const Homepage = () => {
 			centerY={true}
 			className={"min-h-screen h-full"}
 		>
-			<div className={"grid grid-cols-2 gap-4"}>
+			<div className={"xl:w-max w-full px-8 grid xl:grid-cols-2 grid-cols-1 gap-4"}>
 				<Button
+					fullWidth
+					variant="bordered-3d"
+					color={"secondary"}
+					size={"2xl"}
+					startIcon={ICON_CONFIG.CARDGAME_LOGO}
+					onClick={() => navigate("/card-game")}
+				>
+					Bài Tiến lên
+				</Button>
+				{/* <Button
 					fullWidth
 					variant="bordered-3d"
 					color={"primary"}
@@ -37,17 +47,8 @@ const Homepage = () => {
 					onClick={() => navigate("/football")}
 				>
 					Bóng đá
-				</Button>
-				<Button
-					fullWidth
-					variant="bordered-3d"
-					color={"secondary"}
-					size={"2xl"}
-					startIcon={ICON_CONFIG.CARDGAME_LOGO}
-					onClick={() => navigate("/card-game")}
-				>
-					Bài Tiến lên
-				</Button>
+				</Button> */}
+
 				<Button
 					fullWidth
 					variant="solid-3d"

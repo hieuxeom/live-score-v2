@@ -14,3 +14,11 @@ export type TSignInResponse = {
 	username: string;
 	user_id: string;
 };
+
+export type TEmailCheckResponse = {
+	isValid: boolean;
+	emailInfo: {
+		email: string;
+		username: string;
+	};
+};

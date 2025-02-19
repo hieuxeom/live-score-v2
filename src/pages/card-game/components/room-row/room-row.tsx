@@ -3,7 +3,8 @@ import Button from "../../../../components/button";
 import Typography from "../../../../components/typography";
 import ICON_CONFIG from "../../../../configs/icon.config";
 import ROUTE_PATH from "../../../../configs/routes.config";
-import { TRoomInfo } from "../../../../types/cardgame";
+import { TRoomInfo } from "../../../../types/game-card";
+import clsx from "clsx";
 
 interface RoomRowProps {
 	roomInfo: TRoomInfo;
@@ -19,9 +20,10 @@ const RoomRow = ({ roomInfo }: RoomRowProps) => {
 	return (
 		<div
 			onClick={handleEnterRoom}
-			className={
-				"w-full p-4 flex justify-between items-center border-secondary border-b-8 border-2 rounded-2xl hover:border-secondary transtion-all duration-300 cursor-pointer"
-			}
+			className={clsx(
+				"w-full p-4 flex justify-between items-center border-secondary border-b-8 border-2 rounded-2xl hover:border-secondary transtion-all duration-300 cursor-pointer",
+				""
+			)}
 		>
 			<Typography
 				type={"h2"}
@@ -29,7 +31,7 @@ const RoomRow = ({ roomInfo }: RoomRowProps) => {
 			>
 				#{roomInfo.room_id}
 			</Typography>
-			<div className={"w-3/5 flex justify-center items-center gap-4"}>
+			<div className={clsx("hidden", "lg:w-3/5 lg:flex lg:justify-center lg:items-center lg:gap-4")}>
 				<div className={"flex flex-col items-center gap-2 px-4 h-full"}>
 					<Typography
 						type={"p"}

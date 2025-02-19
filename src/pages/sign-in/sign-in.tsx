@@ -35,10 +35,10 @@ const SignIn = () => {
 			.post<IAPIResponse<TSignInResponse>>(API_ROUTES.ACCOUNT.SIGN_IN, signInForm)
 			.then((response) => response.data)
 			.then((response) => {
-				setCookies("access_token", response.results.access_token, { maxAge: 10 });
-				setCookies("refresh_token", response.results.refresh_token, { maxAge: 60 * 60 * 24 });
-				setCookies("username", response.results.username, { maxAge: 60 * 60 * 24 });
-				setCookies("user_id", response.results.user_id, { maxAge: 60 * 60 * 24 });
+				setCookies("access_token", response.results.access_token, { maxAge: 10, path: "/" });
+				setCookies("refresh_token", response.results.refresh_token, { maxAge: 60 * 60 * 24, path: "/" });
+				setCookies("username", response.results.username, { maxAge: 60 * 60 * 24, path: "/" });
+				setCookies("user_id", response.results.user_id, { maxAge: 60 * 60 * 24, path: "/" });
 				navigate(ROUTE_PATH.HOME);
 			});
 

@@ -3,7 +3,7 @@ import useAxios from "../../hooks/useAxios";
 import { useCookies } from "react-cookie";
 import { useEffect, useState } from "react";
 import { IAPIResponse } from "../../types/general";
-import { TRoomInfo, TSocketRoomCreated } from "../../types/cardgame";
+import { TRoomInfo, TGameCardSocketRoomCreated } from "../../types/game-card";
 import API_ROUTES from "../../configs/api-routes.config";
 import useSocket from "../../hooks/useSocket";
 import Wrapper from "../../components/wrapper";
@@ -14,10 +14,14 @@ import ROUTE_PATH from "../../configs/routes.config";
 import RoomRow from "./components/room-row";
 import SOCKET_EVENT_NAMES from "../../configs/socket-event-names.config";
 import Checkbox from "../../components/checkbox";
+import clsx from "clsx";
+import useScreenSize from "../../hooks/useScreenSize";
+import { BREAK_POINT } from "../../configs/break-points.config";
 
 // interface CardGameProps {}
 
 const CardGame = () => {
+	const { width } = useScreenSize();
 	const axios = useAxios();
 	const socket = useSocket();
 
@@ -42,11 +46,11 @@ const CardGame = () => {
 	}, []);
 
 	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+		socket.on(SOCKET_EVENT_NAMES.CREATE_NEW_ROOM.RECEIVE, (response: TGameCardSocketRoomCreated) => {
 			return setListRooms(response.listRooms);
 		});
 
-		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TSocketRoomCreated) => {
+		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TGameCardSocketRoomCreated) => {
 			return setListRooms(response.listRooms);
 		});
 	}, []);
@@ -61,30 +65,36 @@ const CardGame = () => {
 
 	return (
 		<Wrapper
-			size={"screen"}
+			size={"full"}
 			centerX={true}
 			orientation={"vertical"}
-			className={"my-16"}
+			className={clsx("my-16 min-h-screen px-4", "xl:px-0", "lg:px-8")}
 		>
-			<div className={"w-3/4 bg-white p-8 shadow-primary-1 rounded-2xl flex flex-col gap-4"}>
-				<div className={"flex justify-between items-center gap-4"}>
-					<div className={"flex items-center gap-2"}>
+			<div
+				className={clsx(
+					"w-full bg-white shadow-primary-1 rounded-2xl flex flex-col gap-4 p-4",
+					"xl:w-3/4",
+					"lg:p-8"
+				)}
+			>
+				<div className={"flex md:justify-between md:flex-row flex-col  items-center gap-4"}>
+					<div className={"flex items-center md:flex-row flex-col md:gap-2 gap-1"}>
 						<Typography
 							type={"h1"}
-							className={" text-center text-primary"}
+							className={"min-w-max text-center text-primary"}
 						>
 							Danh sách
 						</Typography>
 						<Typography
 							type={"h1"}
-							className={" text-center text-secondary"}
+							className={"min-w-max text-center text-secondary"}
 						>
 							Trận đấu
 						</Typography>
 					</div>
 					{cookies.username && (
 						<Button
-							size={"lg"}
+							size={width >= BREAK_POINT.MD ? "lg" : "md"}
 							startIcon={ICON_CONFIG.NEW}
 							isDisabled={!cookies.username}
 							onClick={() => navigate(ROUTE_PATH.CARD_GAME.CREATE_NEW_ROOM)}
@@ -94,8 +104,10 @@ const CardGame = () => {
 					)}
 				</div>
 				<div className={"w-full flex items-center justify-end"}>
-					<div className={"flex items-center text-center"}>
-						<div className={"border-r px-2 flex items-center"}>
+					<div
+						className={clsx("flex items-center text-center flex-col-reverse gap-4", "md:flex-row md:gap-0")}
+					>
+						<div className={clsx("px-2 flex items-center", "md:border-r")}>
 							<Checkbox
 								value={isShowClosedRoom}
 								onChange={(e) => setIsShowClosedRoom(e.target.checked)}
@@ -104,24 +116,26 @@ const CardGame = () => {
 								Hiện phòng đã đóng
 							</Checkbox>
 						</div>
-						<Typography
-							type={"small"}
-							className={"text-secondary px-2 border-r border-dark"}
-						>
-							<strong>{listRooms.length}</strong> đã được tạo
-						</Typography>
-						<Typography
-							type={"small"}
-							className={"text-success px-2 border-r border-dark"}
-						>
-							<strong>{listRooms.filter((_r) => !_r.is_closed).length}</strong> đang hoạt động
-						</Typography>
-						<Typography
-							type={"small"}
-							className={"text-danger px-2"}
-						>
-							<strong>{listRooms.filter((_r) => _r.is_closed).length}</strong> đã đóng
-						</Typography>
+						<div className={"flex items-center text-center"}>
+							<Typography
+								type={"small"}
+								className={"text-secondary px-2 border-r border-dark"}
+							>
+								<strong>{listRooms.length}</strong> đã được tạo
+							</Typography>
+							<Typography
+								type={"small"}
+								className={"text-success px-2 border-r border-dark"}
+							>
+								<strong>{listRooms.filter((_r) => !_r.is_closed).length}</strong> đang hoạt động
+							</Typography>
+							<Typography
+								type={"small"}
+								className={"text-danger px-2"}
+							>
+								<strong>{listRooms.filter((_r) => _r.is_closed).length}</strong> đã đóng
+							</Typography>
+						</div>
 					</div>
 				</div>
 				<Wrapper

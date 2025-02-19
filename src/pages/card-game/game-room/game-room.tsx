@@ -5,13 +5,13 @@ import useAxios from "../../../hooks/useAxios";
 import { useEffect, useState } from "react";
 import {
 	TRoomInfo,
-	TRoomResults,
-	TSocketPlayerChange,
-	TSocketNewResult,
-	TSocketUpdatedRoomConfig,
-	TSocketDeleteResult,
-	TSocketCloseRoom,
-} from "../../../types/cardgame";
+	TGameCardRoomResults,
+	TGameCardSocketPlayerChange,
+	TGameCardSocketNewResult,
+	TGameCardSocketUpdatedRoomConfig,
+	TGameCardSocketDeleteResult,
+	TGameCardSocketCloseRoom,
+} from "../../../types/game-card";
 import { IAPIResponse } from "../../../types/general";
 import API_ROUTES from "../../../configs/api-routes.config";
 import ROUTE_PATH from "../../../configs/routes.config";
@@ -27,12 +27,17 @@ import PlayHistoryTable from "../components/play-history-table";
 import ModalAddResult from "../components/modal-add-result";
 import PlayerInRoom from "../components/player-in-room";
 import SOCKET_EVENT_NAMES from "../../../configs/socket-event-names.config";
+import clsx from "clsx";
+import useScreenSize from "../../../hooks/useScreenSize";
+import { BREAK_POINT } from "../../../configs/break-points.config";
+import Chip from "../../../components/chip";
 
 // interface GameRoomProps {}
 
 const GameRoom = () => {
 	const socket = useSocket();
 
+	const { width } = useScreenSize();
 	const [cookies] = useCookies(["username", "user_id"]);
 
 	const { roomId } = useParams();
@@ -44,8 +49,7 @@ const GameRoom = () => {
 	const [currentInRoom, setCurrentInRoom] = useState<number>(0);
 
 	const [roomInfo, setRoomInfo] = useState<TRoomInfo>();
-
-	const [roomResults, setRoomResults] = useState<TRoomResults>();
+	const [roomResults, setRoomResults] = useState<TGameCardRoomResults>();
 	const [playersInRoom, setPlayersInRoom] = useState<string[]>([]);
 
 	const getRoomInfo = () => {
@@ -63,7 +67,7 @@ const GameRoom = () => {
 		if (!roomId) return;
 
 		return axios
-			.get<IAPIResponse<TRoomResults>>(API_ROUTES.GAME_CARD.GET_ROOM_RESULTS(roomId))
+			.get<IAPIResponse<TGameCardRoomResults>>(API_ROUTES.GAME_CARD.GET_ROOM_RESULTS(roomId))
 			.then((response) => response.data)
 			.then((response) => {
 				setRoomResults(response.results);
@@ -87,29 +91,29 @@ const GameRoom = () => {
 		// if (cookies.username) {
 		socket.emit(SOCKET_EVENT_NAMES.JOIN_CARDGAME_ROOM, { roomId, username: cookies.username });
 		// }
-		socket.on(SOCKET_EVENT_NAMES.PLAYER_CHANGE, (data: TSocketPlayerChange) => {
+		socket.on(SOCKET_EVENT_NAMES.PLAYER_CHANGE, (data: TGameCardSocketPlayerChange) => {
 			setCurrentInRoom(data.currentInRoom);
 			setPlayersInRoom(data.playersInRoom);
 		});
 
-		socket.on(SOCKET_EVENT_NAMES.CREATE_RESULT.RECEIVE, (response: TSocketNewResult) => {
+		socket.on(SOCKET_EVENT_NAMES.CREATE_RESULT.RECEIVE, (response: TGameCardSocketNewResult) => {
 			toast.success(`${response.createdBy} vừa thêm kết quả mới`);
 			setRoomResults(response.roomResults);
 			setIsShowModal(false);
 		});
 
-		socket.on(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.RECEIVE, (response: TSocketUpdatedRoomConfig) => {
+		socket.on(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.RECEIVE, (response: TGameCardSocketUpdatedRoomConfig) => {
 			toast.success(`${response.updatedBy} vừa cập nhật cấu hình điểm`);
 			setRoomInfo(response.roomDetails);
 			getRoomResults();
 		});
 
-		socket.on(SOCKET_EVENT_NAMES.DELETE_MATCH_RESULTS.RECEIVE, (response: TSocketDeleteResult) => {
+		socket.on(SOCKET_EVENT_NAMES.DELETE_MATCH_RESULTS.RECEIVE, (response: TGameCardSocketDeleteResult) => {
 			toast.success(`${response.deleteBy} vừa xóa kết quả`);
 			setRoomResults(response.roomResults);
 		});
 
-		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TSocketCloseRoom) => {
+		socket.on(SOCKET_EVENT_NAMES.CLOSE_ROOM.RECEIVE, (response: TGameCardSocketCloseRoom) => {
 			toast.error(`${response.closedBy} đã đóng phòng`);
 			setRoomInfo(response.roomDetails);
 		});
@@ -125,51 +129,70 @@ const GameRoom = () => {
 				<Loading />
 			) : (
 				<Wrapper
-					size={"screen"}
+					size={"full"}
 					centerX={true}
 					orientation={"vertical"}
-					className={"my-16"}
+					className={clsx("h-full my-16", "xl:px-8", "px-4", "2xl:h-[120vh]", "xl:h-[120vh]", "")}
 				>
 					<>
-						<div className={"w-3/4 bg-white p-8 shadow-primary-1 rounded-2xl flex flex-col gap-4"}>
-							<div className={"flex justify-between items-start"}>
-								<div className={"flex flex-col gap-2"}>
-									<div className={"flex items-center gap-2"}>
+						<div
+							className={clsx(
+								"w-full bg-white p-4 shadow-primary-1 rounded-2xl flex flex-col gap-4",
+								"2xl:w-3/4",
+								"lg:p-8"
+							)}
+						>
+							<div className={clsx("flex justify-between items-start flex-col gap-4", "lg:flex-row")}>
+								<div className={clsx("flex items-start justify-between w-full", "lg:w-max")}>
+									<div className={clsx("flex flex-col gap-0.5", "lg:gap-2")}>
+										<div className={clsx("flex items-center gap-2", "lg:gap-2")}>
+											<Typography
+												type={"h1"}
+												className={"text-center text-secondary"}
+											>
+												Phòng
+											</Typography>
+											<Typography
+												type={"h1"}
+												className={"text-center text-primary"}
+											>
+												#{roomId}
+											</Typography>
+										</div>
 										<Typography
-											type={"h1"}
-											className={"text-center text-secondary"}
+											type={"muted"}
+											className={"italic"}
 										>
-											Phòng
-										</Typography>
-										<Typography
-											type={"h1"}
-											className={"text-center text-primary"}
-										>
-											#{roomId}
+											Tạo bởi {roomInfo.username}
 										</Typography>
 									</div>
-									<Typography
-										type={"muted"}
-										className={"italic"}
-									>
-										Tạo bởi {roomInfo.username}
-									</Typography>
+									{roomInfo.is_closed ? (
+										<div className={clsx("lg:hidden")}>
+											<Chip color={"danger"}>Đã đóng</Chip>
+										</div>
+									) : (
+										""
+									)}
 								</div>
-								<div className={"flex items-center gap-4"}>
-									<Typography type={"large"}>
+								<div className={clsx("flex items-center gap-4")}>
+									<Typography
+										type={"large"}
+										className={"xl:block hidden"}
+									>
 										<strong className={"text-primary"}>{currentInRoom}</strong> trong phòng
 									</Typography>
+
 									{roomInfo.is_closed ? (
 										<Typography
 											type={"large"}
-											className={"text-danger italic px-4"}
+											className={"lg:block hidden text-danger italic px-4"}
 										>
 											Phòng đã bị đóng
 										</Typography>
 									) : (
 										cookies.user_id === roomInfo.created_by && (
 											<Button
-												size={"lg"}
+												size={width > BREAK_POINT.LG ? "lg" : "md"}
 												color={"danger"}
 												variant={"solid-3d"}
 												onClick={() => handleCloseRoom()}
@@ -180,7 +203,7 @@ const GameRoom = () => {
 										)
 									)}
 									<Button
-										size={"lg"}
+										size={width > BREAK_POINT.LG ? "lg" : "md"}
 										color={"secondary"}
 										variant={"solid-3d"}
 										onClick={handleLeaveRoom}
@@ -191,7 +214,7 @@ const GameRoom = () => {
 								</div>
 							</div>
 						</div>
-						<div className={"w-3/4 grid grid-cols-3 gap-4"}>
+						<div className={clsx("w-full flex flex-col gap-4", "2xl:w-3/4", "lg:grid grid-cols-3 ")}>
 							{!roomResults ? (
 								<div>Loading...</div>
 							) : (
@@ -204,7 +227,11 @@ const GameRoom = () => {
 									<div className={"flex flex-col gap-4"}>
 										{!roomInfo.is_closed && cookies.username && (
 											<div
-												className={"w-full h-[10vh] bg-light p-4 rounded-2xl shadow-primary-1"}
+												className={clsx(
+													"w-full bg-light p-4 rounded-2xl shadow-primary-1",
+													"xl:h-[10vh]",
+													"lg:h-[6.5vh]"
+												)}
 											>
 												<Button
 													fullWidth
@@ -213,22 +240,31 @@ const GameRoom = () => {
 													startIcon={ICON_CONFIG.NEW}
 													size={"lg"}
 													onClick={() => setIsShowModal(true)}
+													className={"min-w-max"}
 												>
 													Thêm kết quả mới
 												</Button>
 											</div>
 										)}
 										<div
-											className={
-												"bg-white p-8 shadow-primary-1 rounded-2xl col-span-1 w-full h-[35vh] flex flex-col gap-2"
-											}
+											className={clsx(
+												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full h-[35vh] flex flex-col gap-2",
+												"2xl:h-[35vh] 2xl:p-8",
+												"xl:h-[38vh]",
+												"lg:h-[24vh] lg:p-4",
+												"p-4"
+											)}
 										>
 											<RoomScoreBoard scoreBoard={roomResults.scoreBoard} />
 										</div>
 										<div
-											className={
-												"bg-white p-8 shadow-primary-1 rounded-2xl col-span-1 w-full h-[calc(70vh-35vh-10vh-2rem)] overflow-hidden flex flex-col gap-2"
-											}
+											className={clsx(
+												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full overflow-hidden flex flex-col gap-2",
+												"2xl:h-[calc(70vh-35vh-10vh-2rem)] 2xl:p-8",
+												"xl:h-[calc(70vh-38vh-10vh-2rem)]",
+												"lg:h-[calc(50vh-24vh-8vh-2rem)]",
+												"p-4 h-[25vh]"
+											)}
 										>
 											<PlayerInRoom playersInRoom={playersInRoom} />
 										</div>
@@ -236,7 +272,7 @@ const GameRoom = () => {
 								</>
 							)}
 						</div>
-						<div className={"w-3/4 gap-4"}>
+						<div className={clsx("w-full gap-4", "2xl:w-3/4")}>
 							<MatchConfig
 								roomDetails={roomInfo}
 								onChangeConfig={setRoomInfo}
