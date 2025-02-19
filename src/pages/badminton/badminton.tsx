@@ -1,21 +1,20 @@
+import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router";
 import Button from "../../components/button";
 import Checkbox from "../../components/checkbox";
 import Typography from "../../components/typography";
 import Wrapper from "../../components/wrapper/wrapper";
 import ICON_CONFIG from "../../configs/icon.config";
 import ROUTE_PATH from "../../configs/routes.config";
-import RoomRow from "../card-game/components/room-row";
-import { useNavigate } from "react-router";
-import { useState } from "react";
 interface BadmintonProps {}
 
-const Badminton = (props: BadmintonProps) => {
+const Badminton = ({}: BadmintonProps) => {
 	const [cookies] = useCookies(["username", "user_id"]);
 
 	const [isShowClosedRoom, setIsShowClosedRoom] = useState<boolean>(false);
-	const [listRooms, setListRooms] = useState([]);
-	const [listRoomsRender, setListRoomsRender] = useState([]);
+	// const [listRooms, setListRooms] = useState([]);
+	// const [listRoomsRender, setListRoomsRender] = useState([]);
 
 	const navigate = useNavigate();
 
@@ -68,7 +67,8 @@ const Badminton = (props: BadmintonProps) => {
 							type={"small"}
 							className={"text-secondary px-2 border-r border-dark"}
 						>
-							<strong>{listRooms.length}</strong> đã được tạo
+							<strong>0</strong> đã được tạo
+							{/* <strong>{listRooms.length}</strong> đã được tạo */}
 						</Typography>
 						<Typography
 							type={"small"}
@@ -95,12 +95,13 @@ const Badminton = (props: BadmintonProps) => {
 						backgroundAttachment: "local, local, scroll, scroll",
 					}}
 				>
-					{listRoomsRender.map((room) => (
+					x
+					{/* {listRoomsRender.map((room) => (
 						<RoomRow
 							roomInfo={room}
 							key={room.room_id}
 						/>
-					))}
+					))} */}
 				</Wrapper>
 			</div>
 		</Wrapper>

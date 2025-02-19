@@ -1,33 +1,33 @@
-import { use, useEffect, useState } from "react";
-import Button from "../../../components/button";
-import Wrapper from "../../../components/wrapper";
-import Typography from "../../../components/typography";
-import ICON_CONFIG from "../../../configs/icon.config";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import toast from "react-hot-toast";
 import { useParams } from "react-router";
-import ScoreBlock from "../components/score-block";
-import TimerBlock from "../components/timer-block";
+import Button from "../../../components/button";
 import Input from "../../../components/input";
+import Loading from "../../../components/loading";
+import Typography from "../../../components/typography";
+import Wrapper from "../../../components/wrapper";
+import API_ROUTES from "../../../configs/api-routes.config";
+import ICON_CONFIG from "../../../configs/icon.config";
 import useAxiosServer from "../../../hooks/useAxiosServer";
 import { TBadmintonMatchInfo } from "../../../types/badminton";
 import { IAPIResponse } from "../../../types/general";
-import toast from "react-hot-toast";
-import Loading from "../../../components/loading";
-import API_ROUTES from "../../../configs/api-routes.config";
+import ScoreBlock from "../components/score-block";
+import TimerBlock from "../components/timer-block";
 
 interface BadmintonGameRoomProps {}
 
-const BadmintonGameRoom = (props: BadmintonGameRoomProps) => {
+const BadmintonGameRoom = ({}: BadmintonGameRoomProps) => {
 	const { roomId } = useParams();
 
 	const [matchInfo, setMatchInfo] = useState<TBadmintonMatchInfo>();
 
-	const [matchResults, setMatchResults] = useState({
-		player1_score: 0,
-		player2_score: 0,
-	});
+	// const [matchResults, setMatchResults] = useState({
+	// 	player1_score: 0,
+	// 	player2_score: 0,
+	// });
 
-	const [currentInRoom, setCurrentInRoom] = useState(0);
+	// const [currentInRoom, setCurrentInRoom] = useState(0);
 
 	const [cookies] = useCookies(["username", "user_id"]);
 
@@ -51,6 +51,7 @@ const BadmintonGameRoom = (props: BadmintonGameRoomProps) => {
 	useEffect(() => {
 		if (!roomId) return;
 
+		// setCurrentInRoom(0);
 		getMatchInfo(roomId);
 	}, []);
 
@@ -104,7 +105,7 @@ const BadmintonGameRoom = (props: BadmintonGameRoomProps) => {
 							</div>
 							<div className={"flex items-center gap-4"}>
 								<Typography type={"large"}>
-									<strong className={"text-primary"}>{currentInRoom}</strong> trong phòng
+									<strong className={"text-primary"}>0</strong> trong phòng
 								</Typography>
 								{matchInfo.is_closed ? (
 									<Typography
@@ -167,7 +168,7 @@ const BadmintonGameRoom = (props: BadmintonGameRoomProps) => {
 							<div className={"w-full flex flex-col items-center gap-8"}>
 								<ScoreBlock
 									side={"left"}
-									score={matchResults.player1_score}
+									score={1}
 								/>
 							</div>
 							<TimerBlock
@@ -178,7 +179,7 @@ const BadmintonGameRoom = (props: BadmintonGameRoomProps) => {
 							<div className={"w-full flex flex-col items-center gap-8"}>
 								<ScoreBlock
 									side={"left"}
-									score={matchResults.player1_score}
+									score={1}
 								/>
 							</div>
 						</div>

@@ -15,7 +15,7 @@ import { sliceText } from "../../../utils/slice-text";
 
 interface BadmintonNewRoomProps {}
 
-const BadmintonNewRoom = (props: BadmintonNewRoomProps) => {
+const BadmintonNewRoom = ({}: BadmintonNewRoomProps) => {
 	const axios = useAxiosServer();
 
 	const [matchInfo, setMatchInfo] = useState<TBadmintonNewMatch>({
