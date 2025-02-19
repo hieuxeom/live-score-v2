@@ -13,6 +13,7 @@ const ROUTE_PATH = {
 	AUTH: {
 		SIGN_IN: "/sign-in",
 		SIGN_UP: "/sign-up",
+		SIGN_OUT: "/sign-out",
 	},
 };
 

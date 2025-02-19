@@ -12,12 +12,16 @@ import useAxios from "../../hooks/useAxios";
 import { TSignUp } from "../../types/auth";
 import { TBaseVariants } from "../../types/general";
 import { validateConfirmPassword, validateEmail, validatePassword } from "../../utils/validations";
+import useScreenSize from "../../hooks/useScreenSize";
+import { BREAK_POINT } from "../../configs/break-points.config";
 
 // interface SignUpProps {}
 
 const SignUp = () => {
 	const navigate = useNavigate();
 	const axios = useAxios();
+
+	const { width } = useScreenSize();
 
 	const [signUpForm, setSignUpForm] = useState<TSignUp>({
 		email: "",
@@ -80,9 +84,10 @@ const SignUp = () => {
 			orientation={"vertical"}
 			centerX
 			centerY
+			className={"px-4"}
 		>
 			<div
-				className={"w-96 my-4"}
+				className={"w-96 my-4 px-4"}
 				onClick={() => navigate(ROUTE_PATH.HOME)}
 			>
 				<img
@@ -93,7 +98,10 @@ const SignUp = () => {
 			</div>
 
 			<form
-				className={"w-full max-w-2xl bg-light flex flex-col gap-4 p-8 rounded-3xl shadow-lg h-max"}
+				className={clsx(
+					"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
+					"lg:p-8"
+				)}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
 						handleSignUp();
@@ -104,7 +112,7 @@ const SignUp = () => {
 					type={"h2"}
 					className={"text-primary uppercase !font-black"}
 				>
-					Đăng kí tài khoản mới
+					Đăng kí tài khoản
 				</Typography>
 				<div className={"flex items-center"}>
 					<Button
@@ -119,7 +127,7 @@ const SignUp = () => {
 						}
 						onClick={handleChangeSignUpMethod}
 					>
-						Đăng kí bằng Email
+						{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Email
 					</Button>
 					<Button
 						fullWidth
@@ -133,7 +141,7 @@ const SignUp = () => {
 						}
 						onClick={handleChangeSignUpMethod}
 					>
-						Đăng kí bằng Username
+						{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Username
 					</Button>
 				</div>
 				{currentSignUpMethod === "email" ? (
@@ -172,7 +180,7 @@ const SignUp = () => {
 					validator={(e: string) => validateConfirmPassword(signUpForm.password, e)}
 					errorMessage={"Password không khớp"}
 				/>
-				<div className={"flex items-center justify-between"}>
+				<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
 					<div className={"flex items-center gap-2"}>
 						<Typography>Bạn đã có tài khoản?</Typography>
 						<Button
@@ -185,6 +193,7 @@ const SignUp = () => {
 						</Button>
 					</div>
 					<Button
+						fullWidth={width < BREAK_POINT.LG}
 						size={"md"}
 						color={"primary"}
 						onClick={handleSignUp}

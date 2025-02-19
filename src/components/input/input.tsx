@@ -136,17 +136,15 @@ const Input = ({
 				)}
 			</div>
 
-			{errorMessage !== undefined && (
-				<Typography
-					type={"tiny"}
-					className={clsx("text-danger italic mt-2", {
-						invisible: !isError && (!validator || handleValidator()),
-						visible: isError || (validator && !handleValidator()),
-					})}
-				>
-					{errorMessage}
-				</Typography>
-			)}
+			{isError ||
+				(validator && !handleValidator() && (
+					<Typography
+						type={"tiny"}
+						className={clsx("text-danger italic mt-2")}
+					>
+						{errorMessage}
+					</Typography>
+				))}
 		</div>
 	);
 };

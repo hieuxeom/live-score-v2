@@ -13,12 +13,16 @@ import useAxios from "../../hooks/useAxios";
 import { TSignIn, TSignInResponse } from "../../types/auth";
 import { IAPIResponse, TBaseVariants } from "../../types/general";
 import { validateEmail } from "../../utils/validations";
+import useScreenSize from "../../hooks/useScreenSize";
+import { BREAK_POINT } from "../../configs/break-points.config";
 
 // interface SignInProps {}
 
 const SignIn = () => {
 	const navigate = useNavigate();
 	const axios = useAxios();
+
+	const { width } = useScreenSize();
 
 	const [, setCookies] = useCookies(["access_token", "refresh_token", "username", "user_id"]);
 
@@ -78,9 +82,10 @@ const SignIn = () => {
 			orientation={"vertical"}
 			centerX
 			centerY
+			className={"px-4"}
 		>
 			<div
-				className={"w-96 my-4"}
+				className={"w-96 my-4 px-4"}
 				onClick={() => navigate(ROUTE_PATH.HOME)}
 			>
 				<img
@@ -91,7 +96,10 @@ const SignIn = () => {
 			</div>
 
 			<form
-				className={"w-full max-w-2xl bg-light flex flex-col gap-4 p-8 rounded-3xl shadow-lg h-max"}
+				className={clsx(
+					"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
+					"lg:p-8"
+				)}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
 						handleSignIn();
@@ -104,10 +112,10 @@ const SignIn = () => {
 				>
 					Đăng nhập
 				</Typography>
-				<div className={"flex items-center"}>
+				<div className={clsx("flex items-center flex-row")}>
 					<Button
 						fullWidth
-						className={"rounded-tr-none rounded-br-none border-r-none"}
+						className={clsx("rounded-tr-none rounded-br-none !border-r-0")}
 						color={"secondary"}
 						variant={
 							clsx({
@@ -117,11 +125,11 @@ const SignIn = () => {
 						}
 						onClick={handleChangeSignInMethod}
 					>
-						Đăng nhập bằng Email
+						{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Email
 					</Button>
 					<Button
 						fullWidth
-						className={"rounded-tl-none rounded-bl-none !border-l-0"}
+						className={clsx("rounded-tl-none rounded-bl-none !border-l-0")}
 						color={"secondary"}
 						variant={
 							clsx({
@@ -131,7 +139,7 @@ const SignIn = () => {
 						}
 						onClick={handleChangeSignInMethod}
 					>
-						Đăng nhập bằng Username
+						{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Username
 					</Button>
 				</div>
 				{currentSignInMethod === "email" ? (
@@ -158,8 +166,8 @@ const SignIn = () => {
 					value={signInForm.password}
 					onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
 				/>
-				<div className={"flex items-center justify-between"}>
-					<div className={"flex items-center gap-2"}>
+				<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
+					<div className={clsx("w-full flex gap-2 flex-row items-center")}>
 						<Typography>Bạn chưa có tài khoản?</Typography>
 						<Button
 							variant={"light"}
@@ -167,14 +175,16 @@ const SignIn = () => {
 							showBackground={false}
 							onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_UP)}
 						>
-							Đăng kí tại đây
+							Đăng kí
 						</Button>
 					</div>
 					<Button
+						fullWidth={width < BREAK_POINT.LG}
 						size={"md"}
 						color={"primary"}
 						onClick={handleSignIn}
 						isDisabled={!validSignInForm()}
+						className={"min-w-max"}
 					>
 						Đăng nhập ngay
 					</Button>

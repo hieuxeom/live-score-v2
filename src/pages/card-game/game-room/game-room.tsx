@@ -248,11 +248,11 @@ const GameRoom = () => {
 										)}
 										<div
 											className={clsx(
-												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full h-[35vh] flex flex-col gap-2",
+												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full flex flex-col gap-2",
 												"2xl:h-[35vh] 2xl:p-8",
 												"xl:h-[38vh]",
 												"lg:h-[24vh] lg:p-4",
-												"p-4"
+												"h-[40vh] p-4"
 											)}
 										>
 											<RoomScoreBoard scoreBoard={roomResults.scoreBoard} />

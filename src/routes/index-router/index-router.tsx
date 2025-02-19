@@ -10,6 +10,7 @@ import Badminton from "../../pages/badminton";
 import BadmintonGameRoom from "../../pages/badminton/badminton-game-room";
 import BadmintonNewRoom from "../../pages/badminton/badminton-new-room";
 import Redirect from "../redirect";
+import SignOut from "../../pages/sign-out";
 
 interface IndexRouterProps {}
 
@@ -31,6 +32,10 @@ const IndexRouter = ({}: IndexRouterProps) => (
 				<Route
 					path={"sign-in"}
 					element={<SignIn />}
+				/>
+				<Route
+					path={"sign-out"}
+					element={<SignOut />}
 				/>
 				<Route path={"/card-game"}>
 					<Route
