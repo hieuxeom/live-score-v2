@@ -2,11 +2,16 @@ import { useNavigate } from "react-router";
 import Wrapper from "../../components/wrapper";
 import Button from "../../components/button";
 import ICON_CONFIG from "../../configs/icon.config";
+import { useEffect } from "react";
 
 // interface HomepageProps {}
 
 const Homepage = () => {
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		document.title = "Homepage";
+	}, []);
 
 	return (
 		<Wrapper
