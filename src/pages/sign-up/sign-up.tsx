@@ -14,6 +14,7 @@ import { TBaseVariants } from "../../types/general";
 import { validateConfirmPassword, validateEmail, validatePassword } from "../../utils/validations";
 import useScreenSize from "../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../configs/break-points.config";
+import CustomHelmet from "../../components/custom-helmet";
 
 // interface SignUpProps {}
 
@@ -79,131 +80,138 @@ const SignUp = () => {
 	};
 
 	return (
-		<Wrapper
-			size={"screen"}
-			orientation={"vertical"}
-			centerX
-			centerY
-			className={"px-4"}
-		>
-			<div
-				className={"w-96 my-4 px-4"}
-				onClick={() => navigate(ROUTE_PATH.HOME)}
+		<>
+			<CustomHelmet
+				title={"Đăng kí"}
+				description={"Trang đăng kí"}
+				keywords={["sign up", "register", "account"]}
+			/>
+			<Wrapper
+				size={"screen"}
+				orientation={"vertical"}
+				centerX
+				centerY
+				className={"px-4"}
 			>
-				<img
-					src="/logow_w.png"
-					alt="logos"
-					className={"drop-shadow-2xl"}
-				/>
-			</div>
-
-			<form
-				className={clsx(
-					"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
-					"lg:p-8"
-				)}
-				onKeyDown={(e) => {
-					if (e.key === "Enter") {
-						handleSignUp();
-					}
-				}}
-			>
-				<Typography
-					type={"h2"}
-					className={"text-primary uppercase !font-black"}
+				<div
+					className={"w-96 my-4 px-4"}
+					onClick={() => navigate(ROUTE_PATH.HOME)}
 				>
-					Đăng kí tài khoản
-				</Typography>
-				<div className={"flex items-center"}>
-					<Button
-						fullWidth
-						className={"rounded-tr-none rounded-br-none border-r-none"}
-						color={"secondary"}
-						variant={
-							clsx({
-								solid: currentSignUpMethod === "email",
-								bordered: currentSignUpMethod !== "email",
-							}) as TBaseVariants
-						}
-						onClick={handleChangeSignUpMethod}
-					>
-						{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Email
-					</Button>
-					<Button
-						fullWidth
-						className={"rounded-tl-none rounded-bl-none !border-l-0"}
-						color={"secondary"}
-						variant={
-							clsx({
-								solid: currentSignUpMethod === "username",
-								bordered: currentSignUpMethod !== "username",
-							}) as TBaseVariants
-						}
-						onClick={handleChangeSignUpMethod}
-					>
-						{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Username
-					</Button>
+					<img
+						src="/logow_w.png"
+						alt="logos"
+						className={"drop-shadow-2xl"}
+					/>
 				</div>
-				{currentSignUpMethod === "email" ? (
-					<Input
-						label={"Email"}
-						name={"email"}
-						value={signUpForm.email || ""}
-						onChange={(e) => setSignUpForm((prev) => ({ ...prev, email: e.target.value }))}
-						validator={validateEmail}
-						errorMessage={"Email không hợp lệ"}
-					/>
-				) : (
-					<Input
-						label={"Username"}
-						name={"username"}
-						value={signUpForm.username || ""}
-						onChange={(e) => setSignUpForm((prev) => ({ ...prev, username: e.target.value }))}
-					/>
-				)}
 
-				<Input
-					type={"password"}
-					label={"Mật khẩu"}
-					name={"password"}
-					value={signUpForm.password}
-					onChange={(e) => setSignUpForm((prev) => ({ ...prev, password: e.target.value }))}
-					validator={validatePassword}
-					errorMessage={"Mật khẩu chưa đủ mạnh, cần ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường và 1 số"}
-				/>
-				<Input
-					type={"password"}
-					label={"Nhập lại mật khẩu"}
-					name={"confirm_password"}
-					value={signUpForm.confirm_password}
-					onChange={(e) => setSignUpForm((prev) => ({ ...prev, confirm_password: e.target.value }))}
-					validator={(e: string) => validateConfirmPassword(signUpForm.password, e)}
-					errorMessage={"Password không khớp"}
-				/>
-				<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
-					<div className={"flex items-center gap-2"}>
-						<Typography>Bạn đã có tài khoản?</Typography>
+				<form
+					className={clsx(
+						"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
+						"lg:p-8"
+					)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							handleSignUp();
+						}
+					}}
+				>
+					<Typography
+						type={"h2"}
+						className={"text-primary uppercase !font-black"}
+					>
+						Đăng kí tài khoản
+					</Typography>
+					<div className={"flex items-center"}>
 						<Button
-							variant={"light"}
-							color={"primary"}
-							showBackground={false}
-							onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_IN)}
+							fullWidth
+							className={"rounded-tr-none rounded-br-none border-r-none"}
+							color={"secondary"}
+							variant={
+								clsx({
+									solid: currentSignUpMethod === "email",
+									bordered: currentSignUpMethod !== "email",
+								}) as TBaseVariants
+							}
+							onClick={handleChangeSignUpMethod}
 						>
-							Đăng nhập ngay
+							{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Email
+						</Button>
+						<Button
+							fullWidth
+							className={"rounded-tl-none rounded-bl-none !border-l-0"}
+							color={"secondary"}
+							variant={
+								clsx({
+									solid: currentSignUpMethod === "username",
+									bordered: currentSignUpMethod !== "username",
+								}) as TBaseVariants
+							}
+							onClick={handleChangeSignUpMethod}
+						>
+							{width >= BREAK_POINT.LG ? "Đăng kí bằng" : ""} Username
 						</Button>
 					</div>
-					<Button
-						fullWidth={width < BREAK_POINT.LG}
-						size={"md"}
-						color={"primary"}
-						onClick={handleSignUp}
-						isDisabled={!validateSignUpForm()}
-					>
-						Tạo tài khoản
-					</Button>
-				</div>
-			</form>
-		</Wrapper>
+					{currentSignUpMethod === "email" ? (
+						<Input
+							label={"Email"}
+							name={"email"}
+							value={signUpForm.email || ""}
+							onChange={(e) => setSignUpForm((prev) => ({ ...prev, email: e.target.value }))}
+							validator={validateEmail}
+							errorMessage={"Email không hợp lệ"}
+						/>
+					) : (
+						<Input
+							label={"Username"}
+							name={"username"}
+							value={signUpForm.username || ""}
+							onChange={(e) => setSignUpForm((prev) => ({ ...prev, username: e.target.value }))}
+						/>
+					)}
+
+					<Input
+						type={"password"}
+						label={"Mật khẩu"}
+						name={"password"}
+						value={signUpForm.password}
+						onChange={(e) => setSignUpForm((prev) => ({ ...prev, password: e.target.value }))}
+						validator={validatePassword}
+						errorMessage={"Mật khẩu chưa đủ mạnh, cần ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường và 1 số"}
+					/>
+					<Input
+						type={"password"}
+						label={"Nhập lại mật khẩu"}
+						name={"confirm_password"}
+						value={signUpForm.confirm_password}
+						onChange={(e) => setSignUpForm((prev) => ({ ...prev, confirm_password: e.target.value }))}
+						validator={(e: string) => validateConfirmPassword(signUpForm.password, e)}
+						errorMessage={"Password không khớp"}
+					/>
+					<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
+						<div className={"flex items-center gap-2"}>
+							<Typography>Bạn đã có tài khoản?</Typography>
+							<Button
+								variant={"light"}
+								color={"primary"}
+								showBackground={false}
+								onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_IN)}
+							>
+								Đăng nhập ngay
+							</Button>
+						</div>
+						<Button
+							fullWidth={width < BREAK_POINT.LG}
+							size={"md"}
+							color={"primary"}
+							onClick={handleSignUp}
+							isDisabled={!validateSignUpForm()}
+						>
+							Tạo tài khoản
+						</Button>
+					</div>
+				</form>
+			</Wrapper>
+		</>
 	);
 };
 

@@ -31,6 +31,7 @@ import clsx from "clsx";
 import useScreenSize from "../../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../../configs/break-points.config";
 import Chip from "../../../components/chip";
+import CustomHelmet from "../../../components/custom-helmet";
 
 // interface GameRoomProps {}
 
@@ -128,164 +129,172 @@ const GameRoom = () => {
 			{!roomInfo ? (
 				<Loading />
 			) : (
-				<Wrapper
-					size={"full"}
-					centerX={true}
-					orientation={"vertical"}
-					className={clsx("h-full my-16", "xl:px-8", "px-4", "2xl:h-[120vh]", "xl:h-[120vh]", "")}
-				>
-					<>
-						<div
-							className={clsx(
-								"w-full bg-white p-4 shadow-primary-1 rounded-2xl flex flex-col gap-4",
-								"2xl:w-3/4",
-								"lg:p-8"
-							)}
-						>
-							<div className={clsx("flex justify-between items-start flex-col gap-4", "lg:flex-row")}>
-								<div className={clsx("flex items-start justify-between w-full", "lg:w-max")}>
-									<div className={clsx("flex flex-col gap-0.5", "lg:gap-2")}>
-										<div className={clsx("flex items-center gap-2", "lg:gap-2")}>
+				<>
+					{" "}
+					<CustomHelmet
+						title={"Phòng " + roomId}
+						description={"Phòng chơi"}
+						keywords={["game room", "room"]}
+					/>
+					<Wrapper
+						size={"full"}
+						centerX={true}
+						orientation={"vertical"}
+						className={clsx("h-full my-16", "xl:px-8", "px-4", "2xl:h-[120vh]", "xl:h-[120vh]", "")}
+					>
+						<>
+							<div
+								className={clsx(
+									"w-full bg-white p-4 shadow-primary-1 rounded-2xl flex flex-col gap-4",
+									"2xl:w-3/4",
+									"lg:p-8"
+								)}
+							>
+								<div className={clsx("flex justify-between items-start flex-col gap-4", "lg:flex-row")}>
+									<div className={clsx("flex items-start justify-between w-full", "lg:w-max")}>
+										<div className={clsx("flex flex-col gap-0.5", "lg:gap-2")}>
+											<div className={clsx("flex items-center gap-2", "lg:gap-2")}>
+												<Typography
+													type={"h1"}
+													className={"text-center text-secondary"}
+												>
+													Phòng
+												</Typography>
+												<Typography
+													type={"h1"}
+													className={"text-center text-primary"}
+												>
+													#{roomId}
+												</Typography>
+											</div>
 											<Typography
-												type={"h1"}
-												className={"text-center text-secondary"}
+												type={"muted"}
+												className={"italic"}
 											>
-												Phòng
-											</Typography>
-											<Typography
-												type={"h1"}
-												className={"text-center text-primary"}
-											>
-												#{roomId}
+												Tạo bởi {roomInfo.username}
 											</Typography>
 										</div>
-										<Typography
-											type={"muted"}
-											className={"italic"}
-										>
-											Tạo bởi {roomInfo.username}
-										</Typography>
+										{roomInfo.is_closed ? (
+											<div className={clsx("lg:hidden")}>
+												<Chip color={"danger"}>Đã đóng</Chip>
+											</div>
+										) : (
+											""
+										)}
 									</div>
-									{roomInfo.is_closed ? (
-										<div className={clsx("lg:hidden")}>
-											<Chip color={"danger"}>Đã đóng</Chip>
-										</div>
-									) : (
-										""
-									)}
-								</div>
-								<div className={clsx("flex items-center gap-4")}>
-									<Typography
-										type={"large"}
-										className={"xl:block hidden"}
-									>
-										<strong className={"text-primary"}>{currentInRoom}</strong> trong phòng
-									</Typography>
-
-									{roomInfo.is_closed ? (
+									<div className={clsx("flex items-center gap-4")}>
 										<Typography
 											type={"large"}
-											className={"lg:block hidden text-danger italic px-4"}
+											className={"xl:block hidden"}
 										>
-											Phòng đã bị đóng
+											<strong className={"text-primary"}>{currentInRoom}</strong> trong phòng
 										</Typography>
-									) : (
-										cookies.user_id === roomInfo.created_by && (
-											<Button
-												size={width > BREAK_POINT.LG ? "lg" : "md"}
-												color={"danger"}
-												variant={"solid-3d"}
-												onClick={() => handleCloseRoom()}
-												startIcon={ICON_CONFIG.CLOSE_ROOM}
+
+										{roomInfo.is_closed ? (
+											<Typography
+												type={"large"}
+												className={"lg:block hidden text-danger italic px-4"}
 											>
-												Đóng phòng
-											</Button>
-										)
-									)}
-									<Button
-										size={width > BREAK_POINT.LG ? "lg" : "md"}
-										color={"secondary"}
-										variant={"solid-3d"}
-										onClick={handleLeaveRoom}
-										endIcon={ICON_CONFIG.LEAVE_ROOM}
-									>
-										Thoát
-									</Button>
+												Phòng đã bị đóng
+											</Typography>
+										) : (
+											cookies.user_id === roomInfo.created_by && (
+												<Button
+													size={width > BREAK_POINT.LG ? "lg" : "md"}
+													color={"danger"}
+													variant={"solid-3d"}
+													onClick={() => handleCloseRoom()}
+													startIcon={ICON_CONFIG.CLOSE_ROOM}
+												>
+													Đóng phòng
+												</Button>
+											)
+										)}
+										<Button
+											size={width > BREAK_POINT.LG ? "lg" : "md"}
+											color={"secondary"}
+											variant={"solid-3d"}
+											onClick={handleLeaveRoom}
+											endIcon={ICON_CONFIG.LEAVE_ROOM}
+										>
+											Thoát
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div className={clsx("w-full flex flex-col gap-4", "2xl:w-3/4", "lg:grid grid-cols-3 ")}>
-							{!roomResults ? (
-								<div>Loading...</div>
-							) : (
-								<>
-									<PlayHistoryTable
-										roomInfo={roomInfo}
-										playHistory={roomResults.playHistory}
-										historyScoreBoard={roomResults.historyScoreBoard}
-									/>
-									<div className={"flex flex-col gap-4"}>
-										{!roomInfo.is_closed && cookies.username && (
+							<div className={clsx("w-full flex flex-col gap-4", "2xl:w-3/4", "lg:grid grid-cols-3 ")}>
+								{!roomResults ? (
+									<div>Loading...</div>
+								) : (
+									<>
+										<PlayHistoryTable
+											roomInfo={roomInfo}
+											playHistory={roomResults.playHistory}
+											historyScoreBoard={roomResults.historyScoreBoard}
+										/>
+										<div className={"flex flex-col gap-4"}>
+											{!roomInfo.is_closed && cookies.username && (
+												<div
+													className={clsx(
+														"w-full bg-light p-4 rounded-2xl shadow-primary-1",
+														"xl:h-[10vh]",
+														"lg:h-[6.5vh]"
+													)}
+												>
+													<Button
+														fullWidth
+														variant={"solid-3d"}
+														color={"primary"}
+														startIcon={ICON_CONFIG.NEW}
+														size={"lg"}
+														onClick={() => setIsShowModal(true)}
+														className={"min-w-max"}
+													>
+														Thêm kết quả mới
+													</Button>
+												</div>
+											)}
 											<div
 												className={clsx(
-													"w-full bg-light p-4 rounded-2xl shadow-primary-1",
-													"xl:h-[10vh]",
-													"lg:h-[6.5vh]"
+													"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full flex flex-col gap-2",
+													"2xl:h-[35vh] 2xl:p-8",
+													"xl:h-[38vh]",
+													"lg:h-[24vh] lg:p-4",
+													"h-[40vh] p-4"
 												)}
 											>
-												<Button
-													fullWidth
-													variant={"solid-3d"}
-													color={"primary"}
-													startIcon={ICON_CONFIG.NEW}
-													size={"lg"}
-													onClick={() => setIsShowModal(true)}
-													className={"min-w-max"}
-												>
-													Thêm kết quả mới
-												</Button>
+												<RoomScoreBoard scoreBoard={roomResults.scoreBoard} />
 											</div>
-										)}
-										<div
-											className={clsx(
-												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full flex flex-col gap-2",
-												"2xl:h-[35vh] 2xl:p-8",
-												"xl:h-[38vh]",
-												"lg:h-[24vh] lg:p-4",
-												"h-[40vh] p-4"
-											)}
-										>
-											<RoomScoreBoard scoreBoard={roomResults.scoreBoard} />
+											<div
+												className={clsx(
+													"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full overflow-hidden flex flex-col gap-2",
+													"2xl:h-[calc(70vh-35vh-10vh-2rem)] 2xl:p-8",
+													"xl:h-[calc(70vh-38vh-10vh-2rem)]",
+													"lg:h-[calc(50vh-24vh-8vh-2rem)]",
+													"p-4 h-[25vh]"
+												)}
+											>
+												<PlayerInRoom playersInRoom={playersInRoom} />
+											</div>
 										</div>
-										<div
-											className={clsx(
-												"bg-white shadow-primary-1 rounded-2xl col-span-1 w-full overflow-hidden flex flex-col gap-2",
-												"2xl:h-[calc(70vh-35vh-10vh-2rem)] 2xl:p-8",
-												"xl:h-[calc(70vh-38vh-10vh-2rem)]",
-												"lg:h-[calc(50vh-24vh-8vh-2rem)]",
-												"p-4 h-[25vh]"
-											)}
-										>
-											<PlayerInRoom playersInRoom={playersInRoom} />
-										</div>
-									</div>
-								</>
-							)}
-						</div>
-						<div className={clsx("w-full gap-4", "2xl:w-3/4")}>
-							<MatchConfig
-								roomDetails={roomInfo}
-								onChangeConfig={setRoomInfo}
-							/>
-						</div>
-					</>
-					<ModalAddResult
-						isShowModal={isShowModal}
-						setIsShowModal={setIsShowModal}
-						matchHistory={roomResults?.playHistory.matchResults || []}
-						roomInfo={roomInfo}
-					/>
-				</Wrapper>
+									</>
+								)}
+							</div>
+							<div className={clsx("w-full gap-4", "2xl:w-3/4")}>
+								<MatchConfig
+									roomDetails={roomInfo}
+									onChangeConfig={setRoomInfo}
+								/>
+							</div>
+						</>
+						<ModalAddResult
+							isShowModal={isShowModal}
+							setIsShowModal={setIsShowModal}
+							matchHistory={roomResults?.playHistory.matchResults || []}
+							roomInfo={roomInfo}
+						/>
+					</Wrapper>
+				</>
 			)}
 		</>
 	);

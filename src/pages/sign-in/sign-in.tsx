@@ -15,6 +15,7 @@ import { IAPIResponse, TBaseVariants } from "../../types/general";
 import { validateEmail } from "../../utils/validations";
 import useScreenSize from "../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../configs/break-points.config";
+import CustomHelmet from "../../components/custom-helmet";
 
 // interface SignInProps {}
 
@@ -77,120 +78,127 @@ const SignIn = () => {
 	};
 
 	return (
-		<Wrapper
-			size={"screen"}
-			orientation={"vertical"}
-			centerX
-			centerY
-			className={"px-4"}
-		>
-			<div
-				className={"w-96 my-4 px-4"}
-				onClick={() => navigate(ROUTE_PATH.HOME)}
+		<>
+			<CustomHelmet
+				title={"Đăng nhập"}
+				description={"Trang đăng nhập"}
+				keywords={["sign in", "login", "account"]}
+			/>
+			<Wrapper
+				size={"screen"}
+				orientation={"vertical"}
+				centerX
+				centerY
+				className={"px-4"}
 			>
-				<img
-					src="/logow_w.png"
-					alt=""
-					className={"drop-shadow-2xl"}
-				/>
-			</div>
-
-			<form
-				className={clsx(
-					"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
-					"lg:p-8"
-				)}
-				onKeyDown={(e) => {
-					if (e.key === "Enter") {
-						handleSignIn();
-					}
-				}}
-			>
-				<Typography
-					type={"h2"}
-					className={"text-primary uppercase !font-black"}
+				<div
+					className={"w-96 my-4 px-4"}
+					onClick={() => navigate(ROUTE_PATH.HOME)}
 				>
-					Đăng nhập
-				</Typography>
-				<div className={clsx("flex items-center flex-row")}>
-					<Button
-						fullWidth
-						className={clsx("rounded-tr-none rounded-br-none !border-r-0")}
-						color={"secondary"}
-						variant={
-							clsx({
-								solid: currentSignInMethod === "email",
-								bordered: currentSignInMethod !== "email",
-							}) as TBaseVariants
-						}
-						onClick={handleChangeSignInMethod}
-					>
-						{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Email
-					</Button>
-					<Button
-						fullWidth
-						className={clsx("rounded-tl-none rounded-bl-none !border-l-0")}
-						color={"secondary"}
-						variant={
-							clsx({
-								solid: currentSignInMethod === "username",
-								bordered: currentSignInMethod !== "username",
-							}) as TBaseVariants
-						}
-						onClick={handleChangeSignInMethod}
-					>
-						{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Username
-					</Button>
+					<img
+						src="/logow_w.png"
+						alt=""
+						className={"drop-shadow-2xl"}
+					/>
 				</div>
-				{currentSignInMethod === "email" ? (
-					<Input
-						label={"Email"}
-						name={"email"}
-						value={signInForm.email || ""}
-						onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
-						validator={validateEmail}
-						errorMessage={"Email không hợp lệ"}
-					/>
-				) : (
-					<Input
-						label={"Username"}
-						name={"username"}
-						value={signInForm.username || ""}
-						onChange={(e) => setSignInForm((prev) => ({ ...prev, username: e.target.value }))}
-					/>
-				)}
-				<Input
-					type={"password"}
-					label={"Mật khẩu"}
-					name={"password"}
-					value={signInForm.password}
-					onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
-				/>
-				<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
-					<div className={clsx("w-full flex gap-2 flex-row items-center")}>
-						<Typography>Bạn chưa có tài khoản?</Typography>
+
+				<form
+					className={clsx(
+						"w-full max-w-2xl bg-light flex flex-col gap-4 rounded-3xl shadow-lg h-max p-4",
+						"lg:p-8"
+					)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							handleSignIn();
+						}
+					}}
+				>
+					<Typography
+						type={"h2"}
+						className={"text-primary uppercase !font-black"}
+					>
+						Đăng nhập
+					</Typography>
+					<div className={clsx("flex items-center flex-row")}>
 						<Button
-							variant={"light"}
-							color={"primary"}
-							showBackground={false}
-							onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_UP)}
+							fullWidth
+							className={clsx("rounded-tr-none rounded-br-none !border-r-0")}
+							color={"secondary"}
+							variant={
+								clsx({
+									solid: currentSignInMethod === "email",
+									bordered: currentSignInMethod !== "email",
+								}) as TBaseVariants
+							}
+							onClick={handleChangeSignInMethod}
 						>
-							Đăng kí
+							{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Email
+						</Button>
+						<Button
+							fullWidth
+							className={clsx("rounded-tl-none rounded-bl-none !border-l-0")}
+							color={"secondary"}
+							variant={
+								clsx({
+									solid: currentSignInMethod === "username",
+									bordered: currentSignInMethod !== "username",
+								}) as TBaseVariants
+							}
+							onClick={handleChangeSignInMethod}
+						>
+							{width >= BREAK_POINT.LG ? "Đăng nhập bằng" : ""} Username
 						</Button>
 					</div>
-					<Button
-						fullWidth={width < BREAK_POINT.LG}
-						size={"md"}
-						color={"primary"}
-						onClick={handleSignIn}
-						isDisabled={!validSignInForm()}
-						className={"min-w-max"}
-					>
-						Đăng nhập ngay
-					</Button>
-				</div>
-			</form>
-		</Wrapper>
+					{currentSignInMethod === "email" ? (
+						<Input
+							label={"Email"}
+							name={"email"}
+							value={signInForm.email || ""}
+							onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
+							validator={validateEmail}
+							errorMessage={"Email không hợp lệ"}
+						/>
+					) : (
+						<Input
+							label={"Username"}
+							name={"username"}
+							value={signInForm.username || ""}
+							onChange={(e) => setSignInForm((prev) => ({ ...prev, username: e.target.value }))}
+						/>
+					)}
+					<Input
+						type={"password"}
+						label={"Mật khẩu"}
+						name={"password"}
+						value={signInForm.password}
+						onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
+					/>
+					<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
+						<div className={clsx("w-full flex gap-2 flex-row items-center")}>
+							<Typography>Bạn chưa có tài khoản?</Typography>
+							<Button
+								variant={"light"}
+								color={"primary"}
+								showBackground={false}
+								onClick={() => navigate(ROUTE_PATH.AUTH.SIGN_UP)}
+							>
+								Đăng kí
+							</Button>
+						</div>
+						<Button
+							fullWidth={width < BREAK_POINT.LG}
+							size={"md"}
+							color={"primary"}
+							onClick={handleSignIn}
+							isDisabled={!validSignInForm()}
+							className={"min-w-max"}
+						>
+							Đăng nhập ngay
+						</Button>
+					</div>
+				</form>
+			</Wrapper>
+		</>
 	);
 };
 

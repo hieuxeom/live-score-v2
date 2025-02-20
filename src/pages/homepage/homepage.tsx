@@ -3,36 +3,39 @@ import Wrapper from "../../components/wrapper";
 import Button from "../../components/button";
 import ICON_CONFIG from "../../configs/icon.config";
 import { useEffect } from "react";
+import CustomHelmet from "../../components/custom-helmet";
 
 // interface HomepageProps {}
 
 const Homepage = () => {
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		document.title = "Homepage";
-	}, []);
-
 	return (
-		<Wrapper
-			size={"full"}
-			orientation={"horizontal"}
-			centerX={true}
-			centerY={true}
-			className={"min-h-screen h-full"}
-		>
-			<div className={"xl:w-max w-full px-8 grid xl:grid-cols-2 grid-cols-1 gap-4"}>
-				<Button
-					fullWidth
-					variant="bordered-3d"
-					color={"secondary"}
-					size={"2xl"}
-					startIcon={ICON_CONFIG.CARDGAME_LOGO}
-					onClick={() => navigate("/card-game")}
-				>
-					Bài Tiến lên
-				</Button>
-				{/* <Button
+		<>
+			<CustomHelmet
+				title={"Trang chủ Livescore"}
+				description={"Trang chủ của Livescore"}
+				keywords={["livescore", "live sccore", "live", "score", "home", "page"]}
+			/>
+			<Wrapper
+				size={"full"}
+				orientation={"horizontal"}
+				centerX={true}
+				centerY={true}
+				className={"min-h-screen h-full"}
+			>
+				<div className={"xl:w-max w-full px-8 grid xl:grid-cols-2 grid-cols-1 gap-4"}>
+					<Button
+						fullWidth
+						variant="bordered-3d"
+						color={"secondary"}
+						size={"2xl"}
+						startIcon={ICON_CONFIG.CARDGAME_LOGO}
+						onClick={() => navigate("/card-game")}
+					>
+						Bài Tiến lên
+					</Button>
+					{/* <Button
 					fullWidth
 					variant="bordered-3d"
 					color={"primary"}
@@ -54,18 +57,19 @@ const Homepage = () => {
 					Bóng đá
 				</Button> */}
 
-				<Button
-					fullWidth
-					variant="solid-3d"
-					// variant="bordered"
-					color={"secondary"}
-					size={"2xl"}
-					isDisabled={true}
-				>
-					Updating...
-				</Button>
-			</div>
-		</Wrapper>
+					<Button
+						fullWidth
+						variant="solid-3d"
+						// variant="bordered"
+						color={"secondary"}
+						size={"2xl"}
+						isDisabled={true}
+					>
+						Updating...
+					</Button>
+				</div>
+			</Wrapper>
+		</>
 	);
 };
 
