@@ -32,7 +32,9 @@ const Header = ({}: HeaderProps) => {
 				<div className={"flex items-center gap-4"}>
 					{cookies.refresh_token ? (
 						<>
-							<Typography type={"small"}>{sliceText(cookies.username, 8) ?? "-"}</Typography>
+							<Typography type={"small"}>
+								{cookies.username ? sliceText(cookies.username, 8) : "-"}
+							</Typography>
 							<Button
 								color={"danger"}
 								size={"sm"}

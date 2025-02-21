@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router";
-import Wrapper from "../../components/wrapper";
 import Button from "../../components/button";
-import ICON_CONFIG from "../../configs/icon.config";
-import { useEffect } from "react";
 import CustomHelmet from "../../components/custom-helmet";
+import Wrapper from "../../components/wrapper";
+import ICON_CONFIG from "../../configs/icon.config";
 
 // interface HomepageProps {}
 
