@@ -8,7 +8,6 @@ import Typography from "../../../../components/typography";
 import { TGameCardScoreBoard, TRoomInfo } from "../../../../types/game-card";
 import Radio from "../../../../components/radio";
 import clsx from "clsx";
-import { sliceText } from "../../../../utils/slice-text";
 
 interface RoomScoreBoardProps {
 	scoreBoard: TGameCardScoreBoard;

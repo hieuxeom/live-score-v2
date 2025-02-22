@@ -1,35 +1,35 @@
-import { useEffect, useState } from "react";
-import {
-	TGameCardHistoryScoreBoard,
-	TGameCardMatchHistory,
-	TRoomInfo,
-	TGameCardPlayHistory,
-	TGameCardTwoPlayResult,
-} from "../../../../types/game-card";
-import FirstPlaceMedal from "../../../../components/icon-svg/first-place-medal";
+import clsx from "clsx";
+import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { useParams } from "react-router";
+import Button from "../../../../components/button";
 import BurnBlackTwo from "../../../../components/icon-svg/burn-black-two";
 import BurnOut from "../../../../components/icon-svg/burn-out";
 import BurnRedTwo from "../../../../components/icon-svg/burn-red-two";
+import FirstPlaceMedal from "../../../../components/icon-svg/first-place-medal";
 import SecondPlaceMedal from "../../../../components/icon-svg/second-place-medal";
 import SweptOut from "../../../../components/icon-svg/swept-out";
 import TakeBlackTwo from "../../../../components/icon-svg/take-black-two";
 import TakeRedTwo from "../../../../components/icon-svg/take-red-two";
 import ThirdPlaceMedal from "../../../../components/icon-svg/third-place-medal";
 import WinAllMedal from "../../../../components/icon-svg/win-all-medal";
-import Typography from "../../../../components/typography";
-import TableWrapper from "../../../../components/table/table-wrapper";
+import Radio from "../../../../components/radio";
 import TableBody from "../../../../components/table/table-body";
 import TableCell from "../../../../components/table/table-cell";
 import TableHeader from "../../../../components/table/table-header";
 import TableRow from "../../../../components/table/table-row";
-import Radio from "../../../../components/radio";
-import { useCookies } from "react-cookie";
-import Button from "../../../../components/button";
+import TableWrapper from "../../../../components/table/table-wrapper";
+import Typography from "../../../../components/typography";
 import ICON_CONFIG from "../../../../configs/icon.config";
-import { useParams } from "react-router";
-import useSocket from "../../../../hooks/useSocket";
 import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
-import clsx from "clsx";
+import useSocket from "../../../../hooks/useSocket";
+import {
+	TGameCardHistoryScoreBoard,
+	TGameCardMatchHistory,
+	TGameCardPlayHistory,
+	TGameCardTwoPlayResult,
+	TRoomInfo,
+} from "../../../../types/game-card";
 
 interface PlayHistoryTableProps {
 	roomInfo: TRoomInfo;
