@@ -217,16 +217,12 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 	const handleSetPlayerResult = (playerResult: string, playerIndex: string) => {
 		setSelectedValue(null);
 		if (SPECIAL_RESULT.some((_v) => _v.key === playerResult)) {
-			console.log("special result");
-
 			if (playerResult === "winAll") {
 				return handleWinAllResult(Number(playerIndex));
 			}
 		}
 
 		if (BASE_RESULT.some((_v) => _v.key === playerResult)) {
-			console.log("normal result");
-
 			return handleNormalResult(Number(playerIndex), playerResult);
 		}
 	};
@@ -533,7 +529,6 @@ const ModalAddResult = ({ isShowModal, setIsShowModal, roomInfo }: ModalAddResul
 					fullWidth
 					isDisabled={!validResultData()}
 					onClick={() => handleSaveNewMatchResult()}
-					// onClick={() => console.log(validResultData())}
 				>
 					Lưu
 				</Button>

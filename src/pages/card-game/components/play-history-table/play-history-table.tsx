@@ -120,10 +120,6 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 		});
 	};
 
-	useEffect(() => {
-		console.log(historyScoreBoard);
-	}, [historyScoreBoard]);
-
 	return (
 		<div
 			className={clsx(
@@ -177,7 +173,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 							<TableCell
 								isHeader
 								borderType={"full"}
-								className={"w-1/5 border-primary"}
+								className={"min-w-[150px] border-primary"}
 							>
 								<Typography
 									type={"h4"}
@@ -188,7 +184,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 							</TableCell>
 							<TableCell
 								isHeader
-								className={"w-1/5 border-primary "}
+								className={"min-w-[250px] border-primary "}
 								borderType={"full"}
 							>
 								<Typography
@@ -201,7 +197,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 							<TableCell
 								isHeader
 								borderType={"full"}
-								className={"w-1/5 border-primary"}
+								className={"min-w-[250px] border-primary"}
 							>
 								<Typography
 									type={"h4"}
@@ -213,7 +209,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 							<TableCell
 								isHeader
 								borderType={"full"}
-								className={"w-1/5 border-primary"}
+								className={"min-w-[250px] border-primary"}
 							>
 								<Typography
 									type={"h4"}
@@ -225,7 +221,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 							<TableCell
 								isHeader
 								borderType={"full"}
-								className={"w-1/5 border-primary"}
+								className={"min-w-[250px] border-primary"}
 							>
 								<Typography
 									type={"h4"}

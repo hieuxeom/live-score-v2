@@ -263,7 +263,10 @@ const GameRoom = () => {
 													"h-[40vh] p-4"
 												)}
 											>
-												<RoomScoreBoard scoreBoard={roomResults.scoreBoard} />
+												<RoomScoreBoard
+													scoreBoard={roomResults.scoreBoard}
+													roomInfo={roomInfo}
+												/>
 											</div>
 											<div
 												className={clsx(

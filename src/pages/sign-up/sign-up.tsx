@@ -61,8 +61,6 @@ const SignUp = () => {
 	const validateSignUpForm = () => {
 		if (currentSignUpMethod === "email") {
 			if (!signUpForm.email || !signUpForm.password || !signUpForm.confirm_password) {
-				console.log("empty");
-
 				return false;
 			}
 

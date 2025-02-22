@@ -34,6 +34,16 @@ const Homepage = () => {
 					>
 						Bài Tiến lên
 					</Button>
+					<Button
+						fullWidth
+						variant="bordered-3d"
+						color={"primary"}
+						size={"2xl"}
+						startIcon={ICON_CONFIG.BADMINTON_LOGO}
+						onClick={() => navigate("/badminton")}
+					>
+						Cầu lông
+					</Button>
 					{/* <Button
 					fullWidth
 					variant="bordered-3d"

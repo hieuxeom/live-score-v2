@@ -15,7 +15,6 @@ const Checkbox = ({ value, onChange, name, children }: CheckboxProps) => (
 				type="checkbox"
 				checked={value}
 				onChange={(e) => {
-					console.log(e.target.checked);
 					onChange(e);
 				}}
 				className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-dark checked:bg-dark checked:border-dark"

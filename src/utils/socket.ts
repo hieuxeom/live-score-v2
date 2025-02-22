@@ -7,7 +7,7 @@ export const initializeSocket = () => {
 		socket = io(import.meta.env.VITE_BASE_SERVER_URL, {
 			autoConnect: false, // Tắt tự động kết nối nếu cần
 			path: "/socket.io/",
-			transports: ["websocket", "polling"],
+			transports: ["polling"],
 		});
 	}
 	return socket;

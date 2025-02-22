@@ -5,15 +5,17 @@ import TableHeader from "../../../../components/table/table-header";
 import TableRow from "../../../../components/table/table-row";
 import TableWrapper from "../../../../components/table/table-wrapper";
 import Typography from "../../../../components/typography";
-import { TGameCardScoreBoard } from "../../../../types/game-card";
+import { TGameCardScoreBoard, TRoomInfo } from "../../../../types/game-card";
 import Radio from "../../../../components/radio";
 import clsx from "clsx";
+import { sliceText } from "../../../../utils/slice-text";
 
 interface RoomScoreBoardProps {
 	scoreBoard: TGameCardScoreBoard;
+	roomInfo: TRoomInfo;
 }
 
-const RoomScoreBoard = ({ scoreBoard }: RoomScoreBoardProps) => {
+const RoomScoreBoard = ({ scoreBoard, roomInfo }: RoomScoreBoardProps) => {
 	const { totalScore, matrixScore } = scoreBoard;
 
 	const [displayScoreType, setDisplayScoreType] = useState<string>("total");
@@ -51,33 +53,50 @@ const RoomScoreBoard = ({ scoreBoard }: RoomScoreBoardProps) => {
 			<TableWrapper className={"w-full"}>
 				<TableHeader>
 					<TableRow>
+						{displayScoreType !== "total" && (
+							<TableCell
+								isHeader
+								borderType={"full"}
+								className={"border-primary-base w-1/5"}
+							>
+								<Typography className={"min-w-max"}>-</Typography>
+							</TableCell>
+						)}
 						<TableCell
 							isHeader
 							borderType={"full"}
-							className={"border-primary-base min-w-max"}
+							className={"border-primary-base w-1/5"}
 						>
-							<Typography className={"min-w-max"}>P1</Typography>
+							<Typography className={"min-w-max"}>
+								{!roomInfo.player1_name.includes("Player") ? roomInfo.player1_name : "P1"}
+							</Typography>
 						</TableCell>
 						<TableCell
 							isHeader
 							borderType={"full"}
-							className={"border-primary-base min-w-max"}
+							className={"border-primary-base w-1/5"}
 						>
-							<Typography className={"min-w-max"}>P2</Typography>
+							<Typography className={"min-w-max"}>
+								{!roomInfo.player2_name.includes("Player") ? roomInfo.player2_name : "P2"}
+							</Typography>
 						</TableCell>
 						<TableCell
 							isHeader
 							borderType={"full"}
-							className={"border-primary-base min-w-max"}
+							className={"border-primary-base w-1/5"}
 						>
-							<Typography className={"min-w-max"}>P3</Typography>
+							<Typography className={"min-w-max"}>
+								{!roomInfo.player3_name.includes("Player") ? roomInfo.player3_name : "P3"}
+							</Typography>
 						</TableCell>
 						<TableCell
 							isHeader
 							borderType={"full"}
-							className={"border-primary-base min-w-max"}
+							className={"border-primary-base w-1/5"}
 						>
-							<Typography className={"min-w-max"}>P4</Typography>
+							<Typography className={"min-w-max"}>
+								{!roomInfo.player4_name.includes("Player") ? roomInfo.player4_name : "P4"}
+							</Typography>
 						</TableCell>
 					</TableRow>
 				</TableHeader>
@@ -112,6 +131,41 @@ const RoomScoreBoard = ({ scoreBoard }: RoomScoreBoardProps) => {
 					) : (
 						matrixScore.map((row, rowIndex) => (
 							<TableRow key={rowIndex}>
+								<TableCell
+									isHeader
+									borderType={"full"}
+									className={"border-primary-base w-1/5"}
+								>
+									{/* <Typography className={"min-w-max"}>P{rowIndex + 1}</Typography> */}
+									{rowIndex === 0 && (
+										<Typography className={"w-full"}>
+											{!roomInfo.player1_name.includes("Player")
+												? roomInfo.player1_name
+												: `P${rowIndex + 1}`}
+										</Typography>
+									)}
+									{rowIndex === 1 && (
+										<Typography className={"w-full"}>
+											{!roomInfo.player2_name.includes("Player")
+												? roomInfo.player2_name
+												: `P${rowIndex + 1}`}
+										</Typography>
+									)}
+									{rowIndex === 2 && (
+										<Typography className={"w-full"}>
+											{!roomInfo.player3_name.includes("Player")
+												? roomInfo.player3_name
+												: `P${rowIndex + 1}`}
+										</Typography>
+									)}
+									{rowIndex === 3 && (
+										<Typography className={"w-full"}>
+											{!roomInfo.player4_name.includes("Player")
+												? roomInfo.player4_name
+												: `P${rowIndex + 1}`}
+										</Typography>
+									)}
+								</TableCell>
 								{row.map((cell, cellIndex) => (
 									<TableCell
 										key={cellIndex}
