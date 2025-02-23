@@ -34,7 +34,7 @@ const Homepage = () => {
 					>
 						Bài Tiến lên
 					</Button>
-					<Button
+					{/* <Button
 						fullWidth
 						variant="bordered-3d"
 						color={"primary"}
@@ -43,7 +43,7 @@ const Homepage = () => {
 						onClick={() => navigate("/badminton")}
 					>
 						Cầu lông
-					</Button>
+					</Button> */}
 					{/* <Button
 					fullWidth
 					variant="bordered-3d"
