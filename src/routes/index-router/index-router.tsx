@@ -6,14 +6,8 @@ import NewRoom from "../../pages/card-game/new-room";
 import GameRoom from "../../pages/card-game/game-room";
 import SignUp from "../../pages/sign-up";
 import SignIn from "../../pages/sign-in";
-import Badminton from "../../pages/badminton";
 import Redirect from "../redirect";
 import SignOut from "../../pages/sign-out";
-import BadmintonNewTournament from "../../pages/badminton/badminton-new-tournament";
-import BadmintonTourInfo from "../../pages/badminton/badminton-tour-info";
-import BadmintonConfigTour from "../../pages/badminton/badminton-config-tour";
-import BadmintonPlayerManagement from "../../pages/badminton/badminton-player-management";
-import BadmintonPlayers from "../../pages/badminton/badminton-players";
 
 interface IndexRouterProps {
 }
@@ -55,38 +49,38 @@ const IndexRouter = ({}: IndexRouterProps) => (
                         element={<GameRoom/>}
                     />
                 </Route>
-                <Route path={"/badminton"}>
-                    <Route
-                        index
-                        element={<Badminton/>}
-                    />
-                    <Route
-                        path={"new"}
-                        element={<BadmintonNewTournament/>}
-                    />
-                    <Route path={"players"}>
-                        <Route
-                            index
-                            element={<BadmintonPlayers/>}
-                        />
-                        <Route
-                            path={"new"}
-                            element={<BadmintonPlayerManagement/>}
-                        />
-                    </Route>
+                {/*<Route path={"/badminton"}>*/}
+                {/*    <Route*/}
+                {/*        index*/}
+                {/*        element={<Badminton/>}*/}
+                {/*    />*/}
+                {/*    <Route*/}
+                {/*        path={"new"}*/}
+                {/*        element={<BadmintonNewTournament/>}*/}
+                {/*    />*/}
+                {/*    <Route path={"players"}>*/}
+                {/*        <Route*/}
+                {/*            index*/}
+                {/*            element={<BadmintonPlayers/>}*/}
+                {/*        />*/}
+                {/*        <Route*/}
+                {/*            path={"new"}*/}
+                {/*            element={<BadmintonPlayerManagement/>}*/}
+                {/*        />*/}
+                {/*    </Route>*/}
 
-                    <Route path={":tourId"}>
-                        <Route
-                            index
-                            element={<BadmintonTourInfo/>}
-                        />
-                        <Route
-                            path={"config"}
-                            element={<BadmintonConfigTour/>}
-                        />
-                    </Route>
+                {/*    <Route path={":tourId"}>*/}
+                {/*        <Route*/}
+                {/*            index*/}
+                {/*            element={<BadmintonTourInfo/>}*/}
+                {/*        />*/}
+                {/*        <Route*/}
+                {/*            path={"config"}*/}
+                {/*            element={<BadmintonConfigTour/>}*/}
+                {/*        />*/}
+                {/*    </Route>*/}
 
-                </Route>
+                {/*</Route>*/}
                 {/*
 				<Route path={"/football"}>
 					<Route
