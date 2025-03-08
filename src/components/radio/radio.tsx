@@ -22,35 +22,35 @@ const Radio = ({
 }: RadioProps) => {
 	const MapInputColor: Record<NonNullable<RadioProps["color"]>, string> = {
 		default: "checked:border-dark before:bg-dark border-dark",
-		primary: "checked:border-primary-base before:bg-primary-base border-primary-base",
-		secondary: "checked:border-secondary-base before:bg-secondary-base border-secondary-base",
-		success: "checked:border-success-base before:bg-success-base border-success-base",
-		warning: "checked:border-warning-base before:bg-warning-base border-warning-base",
-		danger: "checked:border-danger-base before:bg-danger-base border-danger-base",
+		primary: "checked:border-primary before:bg-primary border-primary",
+		secondary: "checked:border-secondary before:bg-secondary border-secondary",
+		success: "checked:border-success before:bg-success border-success",
+		warning: "checked:border-warning before:bg-warning border-warning",
+		danger: "checked:border-danger before:bg-danger border-danger",
 	};
 
 	const MapSpanColor: Record<NonNullable<RadioProps["color"]>, string> = {
 		default: "bg-dark",
-		primary: "bg-primary-base",
-		secondary: "bg-secondary-light",
-		success: "bg-success-base",
-		warning: "bg-warning-base",
-		danger: "bg-danger-base",
+		primary: "bg-primary",
+		secondary: "bg-secondary",
+		success: "bg-success",
+		warning: "bg-warning",
+		danger: "bg-danger",
 	};
 
 	const MapLabelColor: Record<NonNullable<RadioProps["color"]>, string> = {
 		default: "text-dark",
-		primary: "text-primary-base",
-		secondary: "text-secondary-base",
-		success: "text-success-base",
-		warning: "text-warning-base",
-		danger: "text-danger-base",
+		primary: "text-primary",
+		secondary: "text-secondary",
+		success: "text-success",
+		warning: "text-warning",
+		danger: "text-danger",
 	};
 
 	return (
 		<div className="inline-flex items-center cursor-pointer min-w-max">
 			<label
-				className="relative flex cursor-pointer items-center rounded-full p-2"
+				className="relative flex cursor-pointer items-center rounded-full p-2 "
 				htmlFor={name + value}
 			>
 				<input
@@ -68,7 +68,7 @@ const Radio = ({
 				/>
 				<span
 					className={clsx(
-						"absolute  w-2 h-2 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
+						"absolute w-2 h-2 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
 						MapSpanColor[color]
 					)}
 				></span>

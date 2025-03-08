@@ -16,6 +16,7 @@ import { validateEmail } from "../../utils/validations";
 import useScreenSize from "../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../configs/break-points.config";
 import CustomHelmet from "../../components/custom-helmet";
+import ICON_CONFIG from "../../configs/icon.config";
 
 // interface SignInProps {}
 
@@ -155,8 +156,9 @@ const SignIn = () => {
 							name={"email"}
 							value={signInForm.email || ""}
 							onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
-							validator={validateEmail}
 							errorMessage={"Email không hợp lệ"}
+							startContent={ICON_CONFIG.EMAIL}
+							isError={!validateEmail(signInForm.email ?? "")}
 						/>
 					) : (
 						<Input
@@ -164,6 +166,7 @@ const SignIn = () => {
 							name={"username"}
 							value={signInForm.username || ""}
 							onChange={(e) => setSignInForm((prev) => ({ ...prev, username: e.target.value }))}
+							startContent={ICON_CONFIG.USER}
 						/>
 					)}
 					<Input
@@ -172,6 +175,7 @@ const SignIn = () => {
 						name={"password"}
 						value={signInForm.password}
 						onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
+						startContent={ICON_CONFIG.PASSWORD}
 					/>
 					<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
 						<div className={clsx("w-full flex gap-2 flex-row items-center")}>
