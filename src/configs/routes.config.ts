@@ -2,8 +2,9 @@ const ROUTE_PATH = {
 	HOME: "/",
 	BADMINTON: {
 		INDEX: "/badminton",
-		ROOM: (roomId: string | number) => `/badminton/${roomId}`,
-		CREATE_NEW_ROOM: "/badminton/new",
+		TOUR_INFO: (tourId: string | number) => `/badminton/${tourId}`,
+		CREATE_NEW_TOUR: "/badminton/new",
+		TOUR_CONFIG: (tourId: string | number) => `/badminton/${tourId}/config`,
 	},
 	CARD_GAME: {
 		INDEX: "/card-game",

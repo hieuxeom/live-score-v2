@@ -11,3 +11,7 @@ export const validatePassword = (password: string): boolean => {
 export const validateConfirmPassword = (password: string, confirmPassword: string): boolean => {
 	return password === confirmPassword;
 };
+
+export const validateSQLDatetime = (dateString: string) => {
+	return REGEX_CONFIG.DATETIME_SQL.test(dateString);
+};

@@ -108,6 +108,7 @@ export type TGameCardSocketRoomCreated = {
 export type TGameCardSocketNewResult = {
 	createdBy: string;
 	roomResults: TGameCardRoomResults;
+	error: string;
 };
 
 export type TGameCardSocketDeleteResult = {

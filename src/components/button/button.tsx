@@ -13,6 +13,8 @@ interface ButtonProps {
 	fullWidth?: boolean;
 	className?: string;
 	onClick?: () => any;
+	onMouseDown?: () => any;
+	onMouseUp?: () => any;
 	children?: React.ReactNode;
 }
 
@@ -28,6 +30,8 @@ const Button = ({
 	fullWidth = false,
 	className,
 	onClick,
+	onMouseDown,
+	onMouseUp,
 	children,
 }: ButtonProps) => {
 	if (variant === "solid-3d" || variant === "bordered-3d") {
@@ -167,10 +171,10 @@ const Button = ({
 		const MapLightClasses: Record<NonNullable<ButtonProps["color"]>, string> = {
 			default: "border-none text-dark hover:bg-dark-50 transition-all duration-300 ease-in-out",
 			primary: "border-none text-primary hover:bg-primary-50 transition-all duration-300 ease-in-out",
-			secondary: "border-none text-primary hover:bg-secondary-50 transition-all duration-300 ease-in-out",
-			danger: "border-none text-primary hover:bg-danger-50 transition-all duration-300 ease-in-out",
-			warning: "border-none text-primary hover:bg-warning-50 transition-all duration-300 ease-in-out",
-			success: "border-none text-primary hover:bg-success-50 transition-all duration-300 ease-in-out",
+			secondary: "border-none text-secondary hover:bg-secondary-50 transition-all duration-300 ease-in-out",
+			danger: "border-none text-danger hover:bg-danger-50 transition-all duration-300 ease-in-out",
+			warning: "border-none text-warning hover:bg-warning-50 transition-all duration-300 ease-in-out",
+			success: "border-none text-success hover:bg-success-50 transition-all duration-300 ease-in-out",
 		};
 
 		const MapDivClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
@@ -200,6 +204,8 @@ const Button = ({
 		return (
 			<div
 				onClick={!isDisabled ? onClick : undefined}
+				onMouseDown={!isDisabled ? onMouseDown : undefined}
+				onMouseUp={!isDisabled ? onMouseUp : undefined}
 				className={clsx(
 					className,
 					MapDivClasses[variant],

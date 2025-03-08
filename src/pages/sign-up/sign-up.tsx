@@ -15,6 +15,7 @@ import { validateConfirmPassword, validateEmail, validatePassword } from "../../
 import useScreenSize from "../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../configs/break-points.config";
 import CustomHelmet from "../../components/custom-helmet";
+import ICON_CONFIG from "../../configs/icon.config";
 
 // interface SignUpProps {}
 
@@ -56,6 +57,10 @@ const SignUp = () => {
 			setCurrentSignUpMethod("email");
 			setSignUpForm((prev) => ({ ...prev, username: null }));
 		}
+	};
+
+	const validComfirmPassword = () => {
+		return validateConfirmPassword(signUpForm.password, signUpForm.confirm_password);
 	};
 
 	const validateSignUpForm = () => {
@@ -155,8 +160,9 @@ const SignUp = () => {
 							name={"email"}
 							value={signUpForm.email || ""}
 							onChange={(e) => setSignUpForm((prev) => ({ ...prev, email: e.target.value }))}
-							validator={validateEmail}
+							isError={!validateEmail(signUpForm.email || "")}
 							errorMessage={"Email không hợp lệ"}
+							startContent={ICON_CONFIG.EMAIL}
 						/>
 					) : (
 						<Input
@@ -164,6 +170,7 @@ const SignUp = () => {
 							name={"username"}
 							value={signUpForm.username || ""}
 							onChange={(e) => setSignUpForm((prev) => ({ ...prev, username: e.target.value }))}
+							startContent={ICON_CONFIG.USER}
 						/>
 					)}
 
@@ -173,8 +180,9 @@ const SignUp = () => {
 						name={"password"}
 						value={signUpForm.password}
 						onChange={(e) => setSignUpForm((prev) => ({ ...prev, password: e.target.value }))}
-						validator={validatePassword}
 						errorMessage={"Mật khẩu chưa đủ mạnh, cần ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường và 1 số"}
+						isError={!validatePassword(signUpForm.password)}
+						startContent={ICON_CONFIG.PASSWORD}
 					/>
 					<Input
 						type={"password"}
@@ -182,8 +190,9 @@ const SignUp = () => {
 						name={"confirm_password"}
 						value={signUpForm.confirm_password}
 						onChange={(e) => setSignUpForm((prev) => ({ ...prev, confirm_password: e.target.value }))}
-						validator={(e: string) => validateConfirmPassword(signUpForm.password, e)}
+						isError={!validateConfirmPassword(signUpForm.password, signUpForm.confirm_password)}
 						errorMessage={"Password không khớp"}
+						startContent={ICON_CONFIG.PASSWORD}
 					/>
 					<div className={clsx("flex items-center justify-between flex-col gap-4", "lg:flex-row")}>
 						<div className={"flex items-center gap-2"}>

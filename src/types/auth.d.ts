@@ -20,5 +20,5 @@ export type TEmailCheckResponse = {
 	emailInfo: {
 		email: string;
 		username: string;
-	};
+	} | null;
 };
