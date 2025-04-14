@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -17,12 +17,15 @@ import useScreenSize from "../../hooks/useScreenSize";
 import { BREAK_POINT } from "../../configs/break-points.config";
 import CustomHelmet from "../../components/custom-helmet";
 import ICON_CONFIG from "../../configs/icon.config";
+import { LanguageContext } from "../../components/provider/language-provider.tsx";
+import MAP_RES_CODE from "../../configs/response-code-map.config.ts";
 
 // interface SignInProps {}
 
 const SignIn = () => {
 	const navigate = useNavigate();
 	const axios = useAxios();
+	const { currentLanguage } = useContext(LanguageContext);
 
 	const { width } = useScreenSize();
 
@@ -37,7 +40,7 @@ const SignIn = () => {
 	const [currentSignInMethod, setCurrentSignInMethod] = useState<"email" | "username">("email");
 
 	const handleSignIn = () => {
-		const myFn = axios
+		axios
 			.post<IAPIResponse<TSignInResponse>>(API_ROUTES.ACCOUNT.SIGN_IN, signInForm)
 			.then((response) => response.data)
 			.then((response) => {
@@ -46,13 +49,11 @@ const SignIn = () => {
 				setCookies("username", response.results.username, { maxAge: 60 * 60 * 24, path: "/" });
 				setCookies("user_id", response.results.user_id, { maxAge: 60 * 60 * 24, path: "/" });
 				navigate(ROUTE_PATH.HOME);
-			});
-
-		toast.promise(myFn, {
-			loading: "Signing in...",
-			success: "Signed in successfully",
-			error: (error: any) => error.response.data.message,
-		});
+				toast.success(MAP_RES_CODE[response.message][currentLanguage]);
+			})
+			.catch((error) =>
+				toast.error(MAP_RES_CODE[error.response.data.message as keyof typeof MAP_RES_CODE][currentLanguage])
+			);
 	};
 
 	const handleChangeSignInMethod = () => {

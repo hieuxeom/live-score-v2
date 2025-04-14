@@ -34,6 +34,7 @@ const API_ROUTES = {
     ACCOUNT: {
         SIGN_UP: `/${API_ENDPOINTS.ACCOUNT}/sign-up`,
         SIGN_IN: `/${API_ENDPOINTS.ACCOUNT}/sign-in`,
+        GET_ACCESS_TOKEN: `/${API_ENDPOINTS.ACCOUNT}/rftk`,
         EMAIL_CHECK: `/${API_ENDPOINTS.ACCOUNT}/check`,
     },
 };

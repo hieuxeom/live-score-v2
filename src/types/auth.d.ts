@@ -15,6 +15,12 @@ export type TSignInResponse = {
 	user_id: string;
 };
 
+export type TNewAccessToken = {
+	access_token: string;
+	username: string;
+	user_id: string;
+}
+
 export type TEmailCheckResponse = {
 	isValid: boolean;
 	emailInfo: {
