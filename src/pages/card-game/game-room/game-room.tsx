@@ -107,11 +107,12 @@ const GameRoom = ({}: GameRoomProps) => {
 
     useEffect(() => {
         if (isNaN(Number(roomId))) {
-            return navigate(ROUTE_PATH.HOME);
+            navigate(ROUTE_PATH.HOME);
+            return;
         }
 
         Promise.all([getRoomInfo(), getRoomResults()]);
-        
+
         // if (cookies.username) {
         socket.emit(SOCKET_EVENT_NAMES.JOIN_CARDGAME_ROOM, {roomId, username: cookies.username});
         // }

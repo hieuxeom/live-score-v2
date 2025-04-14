@@ -3,11 +3,6 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router";
 import Button from "../../../../components/button";
-import clsx from "clsx";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
-import { useParams } from "react-router";
-import Button from "../../../../components/button";
 import BurnBlackTwo from "../../../../components/icon-svg/burn-black-two";
 import BurnOut from "../../../../components/icon-svg/burn-out";
 import BurnRedTwo from "../../../../components/icon-svg/burn-red-two";
@@ -103,7 +98,7 @@ const PlayHistoryTable = ({ roomInfo, playHistory, historyScoreBoard }: PlayHist
 		twoPlayResult.forEach((data) => {
 			const quantityArray = Array.from({ length: data.quantity });
 
-			quantityArray.forEach((_) => {
+			quantityArray.forEach(() => {
 				if (data.burner === matchData.player_index) {
 					result.push(data.two_color === "red" ? <BurnRedTwo /> : <BurnBlackTwo />);
 				}
