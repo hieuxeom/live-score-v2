@@ -1,15 +1,13 @@
-import { useEffect } from "react";
 import Input from "../../../../components/input/input";
 import Typography from "../../../../components/typography";
-import { TRoomInfo, TGameCardSocketUpdatedRoomConfig } from "../../../../types/game-card";
+import { TRoomInfo } from "../../../../types/game-card";
 
-import Button from "../../../../components/button";
-import useSocket from "../../../../hooks/useSocket";
-import toast from "react-hot-toast";
+import clsx from "clsx";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router";
+import Button from "../../../../components/button";
 import SOCKET_EVENT_NAMES from "../../../../configs/socket-event-names.config";
-import clsx from "clsx";
+import useSocket from "../../../../hooks/useSocket";
 
 interface MatchConfigProps {
 	roomDetails: TRoomInfo;
@@ -39,12 +37,6 @@ const MatchConfig = ({ roomDetails, onChangeConfig }: MatchConfigProps) => {
 			},
 		});
 	};
-
-	useEffect(() => {
-		socket.on(SOCKET_EVENT_NAMES.UPDATE_ROOM_CONFIG.RECEIVE, (response: TGameCardSocketUpdatedRoomConfig) => {
-			toast.success(`${response.updatedBy} vừa cập nhật cấu hình điểm`);
-		});
-	}, []);
 
 	return (
 		<div className={"w-full bg-white p-4 shadow-primary-1 rounded-2xl flex flex-col items-center gap-4"}>

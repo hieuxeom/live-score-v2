@@ -51,7 +51,6 @@ const Input = ({
                    onKeyDown,
                }: InputProps) => {
     const [isFocus, setIsFocus] = useState<boolean>(false);
-    const [isTouched, setIsTouched] = useState(false);
     const MapWrapperClasses: Record<NonNullable<InputProps["labelPlacement"]>, string> = {
         top: "flex flex-col justify-center gap-0.5",
         left: "flex items-center gap-2",
@@ -65,7 +64,7 @@ const Input = ({
                 <label
                     htmlFor={id}
                     className={clsx("min-w-max text-secondary", classNames?.label, {
-                        "!text-danger": isTouched && isError && value.length > 0,
+                        "!text-danger": isError && value.length > 0,
                     })}
                 >
                     <Typography type={"p"}>
@@ -112,7 +111,7 @@ const Input = ({
                         "focus:border-secondary group-hover:border-secondary",
                         classNames?.input,
                         {
-                            "!border-danger !text-danger": isTouched && isError && value.length > 0,
+                            "!border-danger !text-danger": isError && value.length > 0,
                             "border-secondary": isFocus || (!isError && value.length > 0),
                             "!rounded-s-none !border-l-0 pl-0": startContent,
                             "!rounded-e-none !border-r-0": endContent,
@@ -122,7 +121,6 @@ const Input = ({
                         type === "number" &&
                         "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     )}
-                    onClick={() => setIsTouched(true)}
                 />
                 {endContent && (
                     <div
@@ -132,7 +130,7 @@ const Input = ({
                             {
                                 "!border-danger !text-danger": isError && value.length > 0,
                                 "border-secondary text-secondary": isFocus || (!isError && value.length > 0),
-                                "bg-secondary-400 text-light": isDisabled,
+                                "bg-secondary-400 !text-light": isDisabled,
                                 "border-secondary/50 text-secondary/50": !isFocus && value.length === 0,
                             }
                         )}
@@ -155,7 +153,7 @@ const Input = ({
                 )}
             </div>
 
-            {isTouched && isError && value.length > 0 && (
+            {isError && value.length > 0 && (
                 <Typography
                     type={"tiny"}
                     className={clsx("text-danger italic mt-2")}
