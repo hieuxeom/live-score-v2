@@ -19,10 +19,6 @@ const IndexRouter = ({}: IndexRouterProps) => (
                 element={<ClientLayout/>}
             >
                 <Route
-                    index
-                    element={<CardGame/>}
-                />
-                <Route
                     path={"sign-up"}
                     element={<SignUp/>}
                 />
