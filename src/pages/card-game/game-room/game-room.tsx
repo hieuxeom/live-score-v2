@@ -111,7 +111,7 @@ const GameRoom = ({}: GameRoomProps) => {
         }
 
         Promise.all([getRoomInfo(), getRoomResults()]);
-        f
+        
         // if (cookies.username) {
         socket.emit(SOCKET_EVENT_NAMES.JOIN_CARDGAME_ROOM, {roomId, username: cookies.username});
         // }
