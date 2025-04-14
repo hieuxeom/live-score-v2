@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import {useContext, useState} from "react";
+import {useState} from "react";
+import toast from "react-hot-toast";
 import {useNavigate} from "react-router";
 import Button from "../../components/button";
 import Input from "../../components/input";
@@ -9,22 +10,18 @@ import API_ROUTES from "../../configs/api-routes.config";
 import ROUTE_PATH from "../../configs/routes.config";
 import useAxios from "../../hooks/useAxios";
 import {TSignUp} from "../../types/auth";
-import {IAPIResponse, TBaseVariants} from "../../types/general";
+import {TBaseVariants} from "../../types/general";
 import {validateConfirmPassword, validateEmail, validatePassword} from "../../utils/validations";
 import useScreenSize from "../../hooks/useScreenSize";
 import {BREAK_POINT} from "../../configs/break-points.config";
 import CustomHelmet from "../../components/custom-helmet";
 import ICON_CONFIG from "../../configs/icon.config";
-import MAP_RES_CODE from "../../configs/response-code-map.config.ts";
-import toast from "react-hot-toast";
-import {LanguageContext} from "../../components/provider/language-provider.tsx";
 
 // interface SignUpProps {}
 
 const SignUp = () => {
     const navigate = useNavigate();
     const axios = useAxios();
-    const {currentLanguage} = useContext(LanguageContext)
 
     const {width} = useScreenSize();
 
@@ -38,16 +35,18 @@ const SignUp = () => {
     const [currentSignUpMethod, setCurrentSignUpMethod] = useState<"email" | "username">("email");
 
     const handleSignUp = () => {
-        axios
-            .post<IAPIResponse>(API_ROUTES.ACCOUNT.SIGN_UP, signUpForm)
+        const myFn = axios
+            .post(API_ROUTES.ACCOUNT.SIGN_UP, signUpForm)
             .then((response) => response.data)
-            .then((response) => {
-                if (response.status === "success") {
-                    toast.success(MAP_RES_CODE[response.message][currentLanguage])
-                    navigate(ROUTE_PATH.AUTH.SIGN_IN);
-                }
-            })
-            .catch(error => toast.error(MAP_RES_CODE[error.response.data.message as keyof typeof MAP_RES_CODE][currentLanguage]));
+            .then(() => {
+                navigate(ROUTE_PATH.AUTH.SIGN_IN);
+            });
+
+        toast.promise(myFn, {
+            loading: "Creating account...",
+            success: "Account created successfully",
+            error: (error: any) => error.response.data.message,
+        });
     };
 
     const handleChangeSignUpMethod = () => {
